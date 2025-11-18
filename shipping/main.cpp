@@ -14,6 +14,10 @@ void add_ship(Ship ship[], int&);
 
 int main()
 {
+    /* 
+    const int MAX_SHIPS = 20;
+    const int MAX_CONTAINER = 10;
+    */
     int choice, ships_count(0);
     Ship ships[configs::MAX_SHIPS];
 
