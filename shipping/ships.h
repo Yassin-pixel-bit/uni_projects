@@ -17,3 +17,4 @@ struct Ship {
     int container_count;
     int departure_day;
 };
+
