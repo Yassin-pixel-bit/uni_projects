@@ -4,7 +4,7 @@ void clear_faulty_input(const string &message)
 {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cout << message;
+    write_incolor(message, INFO);
 }
 
 void clear_terminal()
@@ -13,7 +13,32 @@ void clear_terminal()
     cout << "\033[2J\033[1;1H";
 }
 
-// TODO: add a function for notification like messages.
+void write_incolor(const string &message, const int &type)
+{
+    const int red = 31;
+    const int yellow = 33;
+    const int green = 32;
+    const int reset = 0;
+
+    switch (type)
+    {
+        case ERROR:
+            cout << "\033[" << red << "m" << message << "\033[" << reset << "m";
+            break;
+
+        case INFO:
+            cout << "\033[" << yellow << "m" << message << "\033[" << reset << "m";
+            break;
+
+        case SUCCESS:
+            cout << "\033[" << green << "m" << message << "\033[" << reset << "m";
+            break;
+
+        default:
+            cout << message;
+            break;
+    }
+}
 
 int read_int_in_range(const int &min, const int &max)
 {

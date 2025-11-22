@@ -29,7 +29,7 @@ int main()
     {
         print_menu();
 
-        cout << "Enter your choice: ";
+        cout << "Enter your option: ";
 
         if(!(cin >> choice))
         {
@@ -56,7 +56,7 @@ int main()
             
             default:
                 clear_terminal();
-                cout << "there is no such command. Please enter a number between [1-7].";
+                write_incolor("there is no such command. Please enter a number between [1-7].", ERROR);
                 break;
         }
     }
@@ -116,6 +116,8 @@ void add_ship(Ship ship[], int &ship_count)
     // add the newly created ship to the ship array
     ship[ship_count] = new_ship;
     ship_count++;
+
+    clear_terminal();
 }
 
 void add_multiple_ships(Ship ship[], int &ship_count)
@@ -130,7 +132,6 @@ void add_multiple_ships(Ship ship[], int &ship_count)
     for (int i = 0; i < amount; i++)
     {
         add_ship(ship, ship_count);
-        clear_terminal();
     }
 }
 
@@ -151,12 +152,13 @@ void submenu_1(Ship ship[], int &ship_count)
     bool running = true;
     create_first_submenu();
     cout << "Enter Your option: ";
-    
-    while(!(cin >> choice))
-        { clear_faulty_input("Please enter a valid input."); }
 
     while(running)
     {
+        
+        while(!(cin >> choice))
+            { clear_faulty_input("Please enter a valid input."); }
+
         switch (choice)
         {
             case 0:
@@ -165,18 +167,18 @@ void submenu_1(Ship ship[], int &ship_count)
 
             case 1:
                 add_ship(ship, ship_count);
-                cout << "Ship added!\n\n";
+                write_incolor("Ship added!\n\n", SUCCESS);
                 running = false;
                 break;
 
             case 2:
                 add_multiple_ships(ship, ship_count);
-                cout << "Ship added!\n\n";
+                write_incolor("Ship added!\n\n", SUCCESS);
                 running = false;
                 break;
                 
             default:
-                cout << "No such command";
+                write_incolor("No such command", ERROR);
                 break;
         }
     }
