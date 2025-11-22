@@ -13,6 +13,7 @@ void print_menu();
 void add_ship(Ship ship[], int&);
 void display_ships(Ship ships[], const int &count);
 void create_first_submenu();
+void submenu_1(Ship ship[], int &ship_count);
 
 int main()
 {
@@ -46,10 +47,7 @@ int main()
             break;
 
             case 1:
-                create_first_submenu();
-                add_ship(ships, ships_count);
-                clear_terminal();
-                cout << "Ship added!\n\n";
+                submenu_1(ships, ships_count);
                 break;
 
             case 2:
@@ -126,21 +124,22 @@ void add_multiple_ships(Ship ship[], int &ship_count)
 
     cout << "How many ships do you want to enter: ";
     
-    while(!(cin >> amount) || amount > 0 || amount < configs::MAX_SHIPS)
+    while(!(cin >> amount) || amount < 0 || amount > configs::MAX_SHIPS)
     { clear_faulty_input("Please enter a valid input."); }
 
     for (int i = 0; i < amount; i++)
     {
         add_ship(ship, ship_count);
+        clear_terminal();
     }
 }
 
 void create_first_submenu()
 {
     const int size = 3;
-    const string options[size] = {"1) add only one ship.",
-                              "2) add a list of ships.",
-                              "0) return."};
+    const string options[size] = {"1) add only one ship.\n",
+                              "2) add a list of ships.\n",
+                              "0) return.\n"};
     
     clear_terminal();
     create_sub_menu(options, size);
@@ -150,6 +149,7 @@ void submenu_1(Ship ship[], int &ship_count)
 {
     int choice;
     bool running = true;
+    create_first_submenu();
     cout << "Enter Your option: ";
     
     while(!(cin >> choice))
@@ -165,11 +165,13 @@ void submenu_1(Ship ship[], int &ship_count)
 
             case 1:
                 add_ship(ship, ship_count);
+                cout << "Ship added!\n\n";
                 running = false;
                 break;
 
             case 2:
                 add_multiple_ships(ship, ship_count);
+                cout << "Ship added!\n\n";
                 running = false;
                 break;
                 
