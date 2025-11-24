@@ -55,7 +55,7 @@ void add_multiple_ships(Ship ship[], int &ship_count)
     }
 }
 
-void create_first_submenu()
+void create_addShip_submenu()
 {
     const int size = 3;
     const string options[size] = {"1) add only one ship.",
@@ -64,4 +64,65 @@ void create_first_submenu()
     
     clear_terminal();
     create_sub_menu(options, size);
+}
+
+void create_search_submenu()
+{
+    const int size = 3;
+    const string options[size] = {"1) search by name (full or prefix).",
+                            "2) Search by cargo amount within limits — enter min and max (tons)",
+                            "0) return."};
+
+    clear_terminal();
+    create_sub_menu(options, size);
+}
+
+// ONLY CHECKS IF THE STRING SATRTS WITH THE USER INPUT
+// case-insensitive
+bool is_valid_name(const string& prefix, const string& name)
+{
+    const int prefix_length = prefix.size();
+
+    // if the checking name is smaller
+    if (prefix_length > name.size())
+        return false;
+
+    for (int i = 0; i < prefix_length; i++)
+    {
+        if(!(tolower(prefix[i]) == tolower(name[i])))
+            return false;
+    }
+
+    return true;
+}
+
+// search with ship name (full or partial)
+void search_with_name(Ship ships[], const int& ship_count)
+{
+    // the ships that we found 
+    Ship valid_ships[MAX_SHIPS];
+    int found_count = 0;
+
+    string prefix;
+    cout << "Search: ";
+    cin >> ws; // clear the leftover input.
+    getline(cin, prefix);
+
+    for (int i = 0; i < ship_count; i++)
+    {
+        string ship_name = ships[i].name;
+        if (is_valid_name(prefix, ship_name))
+        {
+            if (found_count < MAX_SHIPS)
+            {
+                valid_ships[found_count++] = ships[i];
+            }
+        }
+    }
+
+    // display the found ships
+    if (found_count > 0)
+        display_ships(valid_ships, found_count);
+    else
+        write_incolor("No ships founded!", ERROR);
 }

@@ -9,15 +9,11 @@ using namespace std;
 
 // prototypes
 void print_menu();
-void submenu_1(Ship ship[], int &ship_count);
+void submenu_addShip(Ship ship[], int &ship_count);
+void submenu_search(Ship ship[], int &ship_count);
 
 int main()
 {
-    // TODO: if possible put the ships array in a .ini file or similar
-    /* 
-    const int MAX_SHIPS = 20;
-    const int MAX_CONTAINER = 10;
-    */
     int choice, ships_count(0);
     Ship ships[configs::MAX_SHIPS];
 
@@ -43,7 +39,7 @@ int main()
             break;
 
             case 1:
-                submenu_1(ships, ships_count);
+                submenu_addShip(ships, ships_count);
                 break;
 
             case 2:
@@ -51,6 +47,7 @@ int main()
                 break;
 
             case 3:
+                submenu_search(ships, ships_count);
                 break;
             
             default:
@@ -79,11 +76,11 @@ void print_menu()
     cout << "Enter 0 to exit and save.\n";
 }
 
-void submenu_1(Ship ship[], int &ship_count)
+void submenu_addShip(Ship ship[], int &ship_count)
 {
     int choice;
     bool running = true;
-    create_first_submenu();
+    create_addShip_submenu();
     cout << "Enter Your option: ";
 
     while(running)
@@ -114,6 +111,36 @@ void submenu_1(Ship ship[], int &ship_count)
             default:
                 write_incolor("No such command", ERROR);
                 break;
+        }
+    }
+}
+
+void submenu_search(Ship ship[], int &ship_count)
+{
+    int choice;
+    bool running = true;
+    create_search_submenu();
+    cout << "Enter your option: ";
+
+    while (running)
+    {
+        while(!(cin >> choice))
+            { clear_faulty_input("Please enter a valid input."); }
+
+        switch (choice)
+        {
+        case 0:
+            clear_terminal();
+            running = false;
+            break;
+
+        case 1:
+            search_with_name(ship, ship_count);
+            running = false;
+            break;
+        
+        default:
+            break;
         }
     }
 }
