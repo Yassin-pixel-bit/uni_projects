@@ -35,6 +35,7 @@ void write_incolor(const string &message, const int &type)
             break;
 
         default:
+            // print the message without any colors 
             cout << message;
             break;
     }
@@ -68,7 +69,7 @@ void create_sub_menu(const std::string options[], const int &count)
 {
     for (int i = 0; i < count; i++)
     {
-        cout << options[i];
+        cout << options[i] << endl;
     }
 }
 
