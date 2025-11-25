@@ -33,6 +33,7 @@ void add_containers(Ship &ship)
         clear_faulty_input("Please enter a number between [0 - 10]\n"); 
     }
 
+    // checks if the ship can carry more containers
     int space_left = MAX_CONTAINERS - ship.container_count;
     if (container_count > space_left)
     {
@@ -45,15 +46,22 @@ void add_containers(Ship &ship)
 
     for (int i = 0; i < container_count; i++)
     {
+        int remaning_weight = get_remaning_capacity(ship);
+
+        if (remaning_weight <= 0)
+        {
+            write_incolor("The ship can't carry any more weight.\n", ERROR);
+            return;
+        }
+
         int weight;
 
         cout << "how much should container " << i + 1 << " weight(in tons): ";
-        int remaning_weight = get_remaning_capacity(ship);
 
         while(!(cin >> weight) || weight < 0 || weight > remaning_weight)
         { 
-            clear_faulty_input("Please enter a positive number.\n");
-            cout << "enter a number less Than or equal to" << remaning_weight << endl;
+            clear_faulty_input("Enter a positive number not exceeding remaining capacity.\n");
+            cout << "Remaining capacity: " << remaning_weight << " tons\n";
         }
 
         ship.container[ship.container_count].weight = weight;
