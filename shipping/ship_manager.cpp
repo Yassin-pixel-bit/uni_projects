@@ -146,7 +146,7 @@ void create_search_submenu()
 {
     const int size = 3;
     const string options[size] = {"1) search by name (full or prefix).",
-                            "2) Search by cargo amount within limits — enter min and max (tons)",
+                            "2) Search by loaded cargo amount within limits - enter min and max (tons)",
                             "0) return."};
 
     clear_terminal();
@@ -201,4 +201,55 @@ void search_with_name(Ship ships[], const int& ship_count)
         display_ships(valid_ships, found_count);
     else
         write_incolor("No ships founded!", ERROR);
+}
+
+void get_min_max(int &min, int &max)
+{
+    cout << "Enter the min weight in tons: ";
+    while (!(cin >> min) || min < 0)
+    {
+        clear_faulty_input("Please, enter a positive number.\n");
+    }
+
+    cout << "Enter the max weight in tons: ";
+    while (!(cin >> max) || max < 0)
+    {
+        clear_faulty_input("Please, enter a positive number.\n");
+    }
+}
+
+// search the ship that has a loaded cap within a certain range
+void search_by_cargo(Ship ships[], const int& ship_count)
+{
+    Ship valid_ships[MAX_SHIPS];
+    int ship_counter(0), min, max;
+
+    get_min_max(min, max);
+
+    if (min > max)
+    {
+        swap(min, max);
+        write_incolor("the min number is larger than the max number\nSwapping the numbers.\n", INFO);
+    }
+
+    for (int i = 0; i < ship_count; i++)
+    {
+        // to avoid creating a new ship I used a refrence
+        const Ship &current_ship = ships[i];
+
+        if (current_ship.used_capcity <= max && current_ship.used_capcity >= min)
+            {
+                valid_ships[ship_counter] = current_ship;
+                ship_counter++;
+            }
+    }
+
+    if (ship_counter == 0)
+    {
+        write_incolor("No ships in that range were found", INFO);
+    }
+    else
+    {
+        display_ships(valid_ships, ship_counter);
+    }
 }

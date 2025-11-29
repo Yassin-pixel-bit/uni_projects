@@ -14,6 +14,8 @@ void submenu_search(Ship ship[], int &ship_count);
 
 int main()
 {
+    clear_terminal();
+
     int choice, ships_count(0);
     Ship ships[configs::MAX_SHIPS];
 
@@ -136,6 +138,11 @@ void submenu_search(Ship ship[], int &ship_count)
 
         case 1:
             search_with_name(ship, ship_count);
+            running = false;
+            break;
+        
+        case 2:
+            search_by_cargo(ship, ship_count);
             running = false;
             break;
         
