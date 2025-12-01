@@ -3,7 +3,7 @@
 main.cpp
 =============================================================================
 */
-#include "ship_manager.h"
+#include "ship_managment/ship_manager.h"
 
 using namespace std;
 
@@ -160,7 +160,7 @@ void submenu_search(Ship ship[], int &ship_count)
 void submenu_sort(Ship ship[], int &ship_count)
 {
     int choice;
-    bool running;
+    bool running = true;
     create_sort_submenu();
     cout << "Enter your option: ";
 
