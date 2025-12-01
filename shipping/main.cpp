@@ -182,6 +182,7 @@ void submenu_sort(Ship ship[], int &ship_count)
             break;
         
         case 2:
+            sort_by_loaded_cargo(ship, ship_count);
             running = false;
             break;
         
