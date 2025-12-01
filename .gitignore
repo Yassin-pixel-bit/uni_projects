@@ -17,6 +17,9 @@
 # Mono auto generated files
 mono_crash.*
 
+# Visual Studio Code settings and workspace files
+.vscode/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
