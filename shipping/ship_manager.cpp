@@ -153,6 +153,17 @@ void create_search_submenu()
     create_sub_menu(options, size);
 }
 
+void create_sort_submenu()
+{
+    const int size = 3;
+    const string options[size] = {"1) Sort by ship capacity (ascending)",
+                            "2) Sort by loaded amount (ascending/descending)",
+                            "0) return."};
+
+    clear_terminal();
+    create_sub_menu(options, size);
+}
+
 // ONLY CHECKS IF THE STRING SATRTS WITH THE USER INPUT
 // case-insensitive
 bool is_valid_name(const string& prefix, const string& name)
@@ -252,4 +263,79 @@ void search_by_cargo(Ship ships[], const int& ship_count)
     {
         display_ships(valid_ships, ship_counter);
     }
+}
+
+void sort_by_ship_cap(Ship ships[], const int& ship_count)
+{
+    Ship sorted_ships[MAX_SHIPS];
+
+    // sort the ships ascendingly
+    if (ship_count == 0)
+    {
+        clear_terminal();
+        write_incolor("No ships found!\n", ERROR);
+        return;
+    }
+
+    // no need to display or ask the user anything since there is nothing to save/change in the original array
+    if (ship_count == 1)
+    {
+        clear_terminal();
+        write_incolor("There is only one ship, nothing changed.\n", INFO);
+        return;
+    }
+
+    // fill the array with ships
+    for (int i = 0; i < ship_count; i++)
+    {
+        sorted_ships[i] = ships[i];
+    }
+
+    bool sorted = false;
+    for (int i = ship_count; i > 1; i--)
+    {
+        if (sorted)
+            break;
+        sorted = true;
+        for (int j = 0; j < i - 1; j++)
+        {
+            Ship &current_ship = sorted_ships[j];
+            Ship &next_ship = sorted_ships[j + 1];
+
+            if (current_ship.capacity > next_ship.capacity)
+            {
+                swap(current_ship, next_ship);
+                sorted = false;
+            }
+        }
+    }
+
+    // display the sorted array
+    display_ships(sorted_ships, ship_count);
+
+    // ask the user if he wants to save it or not
+    char answer;
+    do {
+        cout << "Do you want to save or use the old arrangment ['y','n']: ";
+        cin >> answer;
+        answer = tolower(answer); 
+
+    } while (answer != 'y' && answer != 'n');
+
+    // If yes, copy the data back element by element
+    if (answer == 'y')
+    {
+        clear_terminal();
+
+        for (int i = 0; i < ship_count; i++)
+        {
+            ships[i] = sorted_ships[i]; 
+        }
+
+        write_incolor("Arrangement saved successfully.\n", SUCCESS);
+        
+    }
+    else
+        return;
+
 }

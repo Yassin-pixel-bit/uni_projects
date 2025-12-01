@@ -11,6 +11,7 @@ using namespace std;
 void print_menu();
 void submenu_addShip(Ship ship[], int &ship_count);
 void submenu_search(Ship ship[], int &ship_count);
+void submenu_sort(Ship ship[], int &ship_count);
 
 int main()
 {
@@ -50,6 +51,10 @@ int main()
 
             case 3:
                 submenu_search(ships, ships_count);
+                break;
+
+            case 4:
+                submenu_sort(ships, ships_count);
                 break;
             
             default:
@@ -147,6 +152,42 @@ void submenu_search(Ship ship[], int &ship_count)
             break;
         
         default:
+            break;
+        }
+    }
+}
+
+void submenu_sort(Ship ship[], int &ship_count)
+{
+    int choice;
+    bool running;
+    create_sort_submenu();
+    cout << "Enter your option: ";
+
+    while (running)
+    {
+        while(!(cin >> choice))
+            { clear_faulty_input("Please enter a valid input."); }
+
+        switch (choice)
+        {
+        case 0:
+            clear_terminal();
+            running = false;
+            break;
+
+        case 1:
+            sort_by_ship_cap(ship, ship_count);
+            running = false;
+            break;
+        
+        case 2:
+            running = false;
+            break;
+        
+        default:
+            clear_terminal();
+            write_incolor("No such command", ERROR);
             break;
         }
     }

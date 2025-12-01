@@ -12,3 +12,5 @@ void create_addShip_submenu();
 void search_with_name(Ship ships[], const int& ship_count);
 void create_search_submenu();
 void search_by_cargo(Ship ships[], const int& ship_count);
+void create_sort_submenu();
+void sort_by_ship_cap(Ship ships[], const int& ship_count);
