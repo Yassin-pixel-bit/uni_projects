@@ -7,13 +7,75 @@ void display_ships(Ship ships[], const int &count)
     if (count == 0)
         write_incolor("There are no ships to display\n", ERROR);
 
+    // Find the longest ship name
+    const string name_header = "Ship Name";
+    int max_name_length = name_header.length();
+
+    for (int i = 0; i < count; i++)
+    {
+        if (ships[i].name.length() > max_name_length)
+            max_name_length = ships[i].name.length();
+    }
+
+    // add padding
+    max_name_length += 2;
+
+    // Column widths
+    const int id_width = 4;
+    const int ship_no_width = 10;
+    const int capacity_width = 13;
+    const int used_width = 11;
+    const int departure_width = 15;
+    const int name_width = max_name_length;
+
+    // total table width
+    int total_width = id_width + ship_no_width + name_width + capacity_width + used_width + departure_width + 7; // +7 for separators
+
+    // Print top border
+    cout << "+";
+    for (int i = 0; i < total_width - 2; i++)
+        cout << "=";
+    cout << "+\n";
+
+    // Print header
+    cout << "| " 
+         << left << setw(id_width - 1) << "ID" << "| "
+         << setw(ship_no_width - 1) << "Ship No." << "| "
+         << setw(name_width - 1) << "Ship Name" << "| "
+         << setw(capacity_width - 1) << "Capacity(t)" << "| "
+         << setw(used_width - 1) << "Used(t)" << "| "
+         << setw(departure_width - 1) << "Departure Day" << " |\n";
+
+    // Print header separator
+    cout << "+";
+    cout << string(id_width, '=') << "|";
+    cout << string(ship_no_width, '=') << "|";
+    cout << string(name_width, '=') << "|";
+    cout << string(capacity_width, '=') << "|";
+    cout << string(used_width, '=') << "|";
+    cout << string(departure_width, '=');
+    cout << "+\n";
+
+    // Print ship data
     for (int i = 0; i < count; i++)
     {
         Ship current_ship = ships[i];
         int id = i + 1;
-        cout << id << " | shipNo: " << current_ship.number << " Ship name: " << current_ship.name
-        << "  capacity(t): " << current_ship.capacity << " Departure day: " << current_ship.departure_day << endl;
+
+        cout << "| " 
+             << left << setw(id_width - 1) << id << "| "
+             << setw(ship_no_width - 1) << current_ship.number << "| "
+             << setw(name_width - 1) << current_ship.name << "| "
+             << setw(capacity_width - 1) << current_ship.capacity << "| "
+             << setw(used_width - 1) << current_ship.used_capcity << "| "
+             << setw(departure_width - 1) << current_ship.departure_day << " |\n";
     }
+
+    // Print bottom border
+    cout << "+";
+    for (int i = 0; i < total_width - 2; i++)
+        cout << "=";
+    cout << "+\n";
 }
 
 int get_remaning_capacity(const Ship &ship)

@@ -32,7 +32,7 @@ int main()
         if(!(cin >> choice))
         {
             clear_terminal();
-            clear_faulty_input("Please enetr a valid input.\n");
+            clear_faulty_input("Please enter a valid input.\n");
             continue;
         }
 
@@ -78,12 +78,12 @@ void print_menu()
     // print the main menu
     cout << "1) add ships (single or list).\n";
     cout << "2) display all shipments.\n";
-    cout << "3) Serach & filter.\n";
+    cout << "3) Search & filter.\n";
     cout << "4) Sort.\n";
     cout << "5) File managment.\n";
     cout << "6) advanced features.\n";
     cout << "7) Ship with the largest free capacity.\n";
-    cout << "Enter 0 to exit and save.\n";
+    cout << "0) exit.\n";
 }
 
 void submenu_addShip(Ship ship[], int &ship_count)
