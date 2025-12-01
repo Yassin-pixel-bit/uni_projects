@@ -1,4 +1,4 @@
-#include "ship_manager.h"
+#include "ship_search.h"
 #include "ship_operation.h"
 
 void create_search_submenu()
