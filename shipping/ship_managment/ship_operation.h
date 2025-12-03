@@ -1,13 +1,3 @@
+// Wrapper header: original path moved to `ship_management`.
 #pragma once
-#include <iostream>
-#include <algorithm>
-#include <iomanip>
-#include "../utils.h"
-#include "../ships.h"
-
-using namespace std;
-
-void display_ships(Ship ships[], const int &count);
-void add_ship(Ship ship[], int &ship_count);
-void add_multiple_ships(Ship ship[], int &ship_count);
-void create_addShip_submenu();
+#include "../ship_management/ship_operation.h"

@@ -3,9 +3,9 @@
 main.cpp
 =============================================================================
 */
-#include "ship_managment/ship_search.h"
-#include "ship_managment/ship_sort.h"
-#include "ship_managment/ship_operation.h"
+#include "ship_management/ship_search.h"
+#include "ship_management/ship_sort.h"
+#include "ship_management/ship_operation.h"
 #include "ships.h"
 
 using namespace std;
@@ -58,6 +58,10 @@ int main()
 
             case 4:
                 submenu_sort(ships, ships_count);
+                break;
+
+            case 7:
+                search_with_freecap(ships, ships_count);
                 break;
             
             default:

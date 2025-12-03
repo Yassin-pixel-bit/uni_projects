@@ -4,7 +4,7 @@
 
 using namespace std;
 
-enum meesage_type {
+enum message_type {
     ERROR = 0,
     INFO = 1,
     SUCCESS = 2
