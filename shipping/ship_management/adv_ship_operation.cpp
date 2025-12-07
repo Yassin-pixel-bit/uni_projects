@@ -47,6 +47,7 @@ void submenu_adv_1(Ship ships[], const int ship_count)
                 break;
 
             case 2:
+                search_ship_loaded_10t(ships, ship_count);
                 running = false;
                 break;
 
@@ -88,7 +89,8 @@ void search_by_cap_left(Ship ships[], const int ship_count)
     // loop through all ships to find the right ships
     for (int i = 0; i < ship_count; i++)
     {
-        Ship current_ship = ships[i];
+        // a refrence to avoid copying
+        const Ship &current_ship = ships[i];
         int remaining_cap = get_remaining_capacity(current_ship);
 
         if (remaining_cap >= container_weight)
@@ -104,5 +106,43 @@ void search_by_cap_left(Ship ships[], const int ship_count)
         return;
     }
 
+    display_ships(valid_ships, new_arr_idx);
+}
+
+// display ships that have more than 10 tons loaded
+void search_ship_loaded_10t(Ship ships[], const int ship_count)
+{
+    // early exit
+    if (ship_count == 0)
+    {
+        clear_terminal();
+        write_incolor("No ships found!", ERROR);
+        return;
+    }
+
+    clear_terminal();
+    cout << "Ships with loaded cargo larger than 10 tons\n";
+    cout << "----------------------------------------\n";
+
+    Ship valid_ships[MAX_SHIPS];
+    int new_arr_idx(0);
+
+    for (int i = 0; i < ship_count; i++)
+    {
+        // a refrence to avoid copying
+        const Ship &current_ship = ships[i];
+        if (current_ship.used_capacity > 10)
+        {
+            valid_ships[new_arr_idx] = current_ship;
+            new_arr_idx++;
+        }
+    }
+
+    if (new_arr_idx == 0)
+    {
+        write_incolor("No ships have loaded cargo larger than 10 tons", INFO);
+        return;
+    }
+ 
     display_ships(valid_ships, new_arr_idx);
 }
