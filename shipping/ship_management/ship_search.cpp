@@ -59,7 +59,10 @@ void search_with_name(Ship ships[], const int& ship_count)
     if (found_count > 0)
         display_ships(valid_ships, found_count);
     else
+    {
+        clear_terminal();
         write_incolor("No ships founded!", ERROR);
+    }
 }
 
 void get_min_max(int &min, int &max)
@@ -105,10 +108,12 @@ void search_by_cargo(Ship ships[], const int& ship_count)
 
     if (ship_counter == 0)
     {
+        clear_terminal();
         write_incolor("No ships in that range were found", INFO);
     }
     else
     {
+        clear_terminal();
         display_ships(valid_ships, ship_counter);
     }
 }

@@ -6,6 +6,7 @@ main.cpp
 #include "ship_management/ship_search.h"
 #include "ship_management/ship_sort.h"
 #include "ship_management/ship_operation.h"
+#include "ship_management/adv_ship_operation.h"
 #include "ships.h"
 
 using namespace std;
@@ -15,6 +16,7 @@ void print_menu();
 void submenu_addShip(Ship ship[], int &ship_count);
 void submenu_search(Ship ship[], int &ship_count);
 void submenu_sort(Ship ship[], int &ship_count);
+void submenu_adv(Ship ship[], int &ship_count);
 
 int main()
 {
@@ -49,6 +51,7 @@ int main()
                 break;
 
             case 2:
+                clear_terminal();
                 display_ships(ships, ships_count);
                 break;
 
@@ -58,6 +61,10 @@ int main()
 
             case 4:
                 submenu_sort(ships, ships_count);
+                break;
+
+            case 6:
+                submenu_adv(ships, ships_count);
                 break;
 
             case 7:
@@ -199,4 +206,35 @@ void submenu_sort(Ship ship[], int &ship_count)
             break;
         }
     }
+}
+
+void submenu_adv(Ship ship[], int &ship_count)
+{
+    int choice;
+    bool running = true;
+    create_adv_menu();
+    cout << "Enter your option: ";
+
+    while (running)
+    {
+        while(!(cin >> choice))
+            { clear_faulty_input("Please enter a valid input."); }
+
+        switch (choice)
+        {
+            case 0:
+                clear_terminal();
+                running = false;
+                break;
+                
+            case 1:
+                submenu_adv_1(ship, ship_count);
+                running = false;
+                break;
+            
+            default:
+                break;
+        }
+    }
+    
 }

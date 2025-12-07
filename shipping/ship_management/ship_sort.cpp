@@ -15,6 +15,7 @@ void create_sort_submenu()
 void ask_user_tosave(Ship ships[], const int ship_count, char &answer)
 {
     // display the sorted array
+    clear_terminal();
     display_ships(ships, ship_count);
 
     // ask the user if he wants to save it or not

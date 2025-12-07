@@ -2,8 +2,6 @@
 
 void display_ships(Ship ships[], const int &count)
 {
-    clear_terminal();
-
     if (count == 0)
         write_incolor("There are no ships to display\n", ERROR);
 
