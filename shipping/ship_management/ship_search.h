@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
 #include <algorithm>
-#include "../utils.h"
-#include "../ships.h"
+#include "../core/utils.h"
+#include "../core/ships.h"
 
 using namespace std;
 

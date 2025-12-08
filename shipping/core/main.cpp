@@ -3,10 +3,10 @@
 main.cpp
 =============================================================================
 */
-#include "ship_management/ship_search.h"
-#include "ship_management/ship_sort.h"
-#include "ship_management/ship_operation.h"
-#include "ship_management/adv_ship_operation.h"
+#include "../ship_management/ship_search.h"
+#include "../ship_management/ship_sort.h"
+#include "../ship_management/ship_operation.h"
+#include "../ship_management/adv_ship_operation.h"
 #include "ships.h"
 
 using namespace std;
@@ -49,25 +49,29 @@ int main()
             case 1:
                 submenu_addShip(ships, ships_count);
                 break;
-
+            
             case 2:
+                
+                break;
+
+            case 3:
                 clear_terminal();
                 display_ships(ships, ships_count);
                 break;
 
-            case 3:
+            case 4:
                 submenu_search(ships, ships_count);
                 break;
 
-            case 4:
+            case 5:
                 submenu_sort(ships, ships_count);
                 break;
 
-            case 6:
+            case 7:
                 submenu_adv(ships, ships_count);
                 break;
 
-            case 7:
+            case 8:
                 search_with_freecap(ships, ships_count);
                 break;
             
@@ -88,6 +92,7 @@ void print_menu()
     
     // print the main menu
     cout << "1) add ships (single or list).\n";
+    cout << "2) add a container.\n";
     cout << "2) display all shipments.\n";
     cout << "3) Search & filter.\n";
     cout << "4) Sort.\n";

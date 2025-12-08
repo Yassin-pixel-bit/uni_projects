@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include "../utils.h"
-#include "../ships.h"
+#include "../core/utils.h"
+#include "../core/ships.h"
 #include "ship_operation.h"
 
 using namespace std;

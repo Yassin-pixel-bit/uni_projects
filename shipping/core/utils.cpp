@@ -16,8 +16,8 @@ void clear_terminal()
 void write_incolor(const string &message, const int &type)
 {
     const int red = 31;
-    const int yellow = 33;
     const int green = 32;
+    const int yellow = 33;
     const int reset = 0;
 
     switch (type)
