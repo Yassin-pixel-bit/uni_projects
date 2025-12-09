@@ -51,7 +51,7 @@ int main()
                 break;
             
             case 2:
-                
+                user_add_containers(ships, ships_count);
                 break;
 
             case 3:

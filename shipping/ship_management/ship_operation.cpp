@@ -158,6 +158,7 @@ void user_add_containers(Ship ships[], const int ship_count)
         return;
     }
 
+    clear_terminal();
     cout << "These are all the available ships: \n";
     cout << "--------------------------------------\n";
 
@@ -176,7 +177,7 @@ void user_add_containers(Ship ships[], const int ship_count)
 
     if (arr_idx == 0)
     {
-        write_incolor("there are no ships that have free capacity.", INFO);
+        write_incolor("there are no ships that have free capacity.\n", INFO);
         return;
     }
 
@@ -192,7 +193,7 @@ void user_add_containers(Ship ships[], const int ship_count)
         cout << "Enter the ship number to add a container to it: ";
         while (!(cin >> ship_num))
         {
-            clear_faulty_input("Please enter an existing ship number");
+            clear_faulty_input("Please enter an existing ship number\n");
             cout << "ship number: ";
         }
 
@@ -205,14 +206,15 @@ void user_add_containers(Ship ships[], const int ship_count)
             }
             else
             {
-                cout << "That ship is full. Please choose one from the list above.\n";
+                write_incolor("That ship is full. Please choose one from the list above.\n", INFO);
             }
         }
         else
             write_incolor("Ship not found!\n", ERROR);
         
     } while (invalid_shipNo);
-
+    
+    clear_terminal();
     add_containers(ships[ship_idx]);
 }
 
