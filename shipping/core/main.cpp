@@ -93,12 +93,12 @@ void print_menu()
     // print the main menu
     cout << "1) add ships (single or list).\n";
     cout << "2) add a container.\n";
-    cout << "2) display all shipments.\n";
-    cout << "3) Search & filter.\n";
-    cout << "4) Sort.\n";
-    cout << "5) File managment.\n";
-    cout << "6) advanced features.\n";
-    cout << "7) Ship with the largest free capacity.\n";
+    cout << "3) display all shipments.\n";
+    cout << "4) Search & filter.\n";
+    cout << "5) Sort.\n";
+    cout << "6) File managment.\n";
+    cout << "7) advanced features.\n";
+    cout << "8) Ship with the largest free capacity.\n";
     cout << "0) exit.\n";
 }
 
@@ -234,6 +234,10 @@ void submenu_adv(Ship ship[], int &ship_count)
                 
             case 1:
                 submenu_adv_1(ship, ship_count);
+                running = false;
+                break;
+
+            case 2:
                 running = false;
                 break;
             
