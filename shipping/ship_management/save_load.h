@@ -1,4 +1,3 @@
-
 #pragma once
 #include <iostream>
 #include <fstream>
@@ -9,6 +8,8 @@
 #include "../core/ships.h"
 #include "ship_operation.h"
 
-const string SAVE_DIR = "save_files";
+const string SAVE_DIR = "../save_files";
 using namespace std;
+
 // prototypes
+void save_file(const Ship ships[], int count);
