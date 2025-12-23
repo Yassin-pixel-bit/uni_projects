@@ -33,6 +33,7 @@ void save_file(const Ship ships[], int count)
     {
         // replace with write_in_color()
         cout << "A problem happend.\n";
+        return;
     }
 
     out_stream.write((char *)&count, sizeof(count));
@@ -61,5 +62,10 @@ void save_file(const Ship ships[], int count)
 
     out_stream.close();
     cout << "succsefully wrote " << count <<" ships to" << file_path << ".\n";
+}
 
+void read(Ship ships[], int &count)
+{
+    // TODO: ask the user which save file he wants to read from
+    
 }
