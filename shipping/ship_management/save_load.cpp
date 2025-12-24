@@ -9,9 +9,24 @@ string ask_user_for_name()
     while (true)
     {
         cout << "What do you want to save this file as: ";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, file_name);
 
-        string file_path = SAVE_DIR + file_name + ".dat";
+        if (file_name.empty()) 
+        {
+            write_incolor("Filename cannot be empty.\n", ERROR);
+            continue;
+        }
+
+        // search the input for these invalid chars we use the escape character '\' before \ and "
+        // string::npos means "non - position" or in this context not found
+        const string invalid_chars = "/\\:*?\"<>|";
+        if (file_name.find_first_of(invalid_chars) != string::npos) {
+            write_incolor("Filename contains invalid characters ( / \\ : * ? \" < > | ).\n", ERROR);
+            continue;
+        }
+
+        string file_path = SAVE_DIR + '/' + file_name + ".dat";
 
         fstream file;
         file.open(file_path);
@@ -28,8 +43,6 @@ string ask_user_for_name()
     }
 
     cout << "got the name.....\n";
-
-    file_name.insert(file_name.begin(), '/');
 
     cout << file_name << endl;
 
@@ -64,15 +77,15 @@ void save_file(const Ship ships[], int count)
         write_incolor("there are no ships to save\n", INFO);
         return;
     }
+ 
+    if (!filesystem::exists(SAVE_DIR))
+        filesystem::create_directory(SAVE_DIR);
 
     if (is_directory_full(SAVE_DIR, MAX_FILES))
         return;
 
-    if (!filesystem::exists(SAVE_DIR))
-        filesystem::create_directory(SAVE_DIR);
-
     string filename = ask_user_for_name();
-    string file_path = SAVE_DIR + filename + ".dat";
+    string file_path = SAVE_DIR + '/' +filename + ".dat";
 
     ofstream out_stream;
     out_stream.open(file_path, ios::binary);
@@ -117,7 +130,7 @@ void display_save_files(string filenames[], int& file_counter)
 
     for (const filesystem::directory_entry& entry : filesystem::directory_iterator(SAVE_DIR))
     {
-        if (file_counter > MAX_FILES)
+        if (file_counter >= MAX_FILES)
             break;
 
         if (entry.path().extension() == ".dat")
@@ -200,7 +213,6 @@ void load_file(Ship ships[], int &count)
         int name_len;
         in_stream.read((char *)&name_len, sizeof(name_len));
 
-        // SUS
         ships[i].name.resize(name_len);
         in_stream.read(&ships[i].name[0], name_len);
 
@@ -213,7 +225,8 @@ void load_file(Ship ships[], int &count)
         {
             if (ships[i].container_count > MAX_CONTAINERS)
             {
-                write_incolor("the save file containes more containers than max allowed", ERROR);
+                write_incolor("the save file containes more containers than max allowed\nwill only load the max amount of conatiners allowed[10]\n", ERROR);
+                ships[i].container_count = MAX_CONTAINERS;
             }
 
             in_stream.read((char *)&ships[i].container, sizeof(Container) * ships[i].container_count);
