@@ -6,10 +6,11 @@ string ask_user_for_name()
 
     string file_name;
 
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
     while (true)
     {
         cout << "What do you want to save this file as: ";
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, file_name);
 
         if (file_name.empty()) 
@@ -223,6 +224,8 @@ void load_file(Ship ships[], int &count)
 
         if (ships[i].container_count > 0)
         {
+            int stored_count = ships[i].container_count;
+
             if (ships[i].container_count > MAX_CONTAINERS)
             {
                 write_incolor("the save file containes more containers than max allowed\nwill only load the max amount of conatiners allowed[10]\n", ERROR);
@@ -230,6 +233,14 @@ void load_file(Ship ships[], int &count)
             }
 
             in_stream.read((char *)&ships[i].container, sizeof(Container) * ships[i].container_count);
+
+            // SKIP the extra data if necessary
+            if (stored_count > MAX_CONTAINERS)
+            {
+                int extra_containers = stored_count - MAX_CONTAINERS;
+                // Move the file cursor forward by the size of the skipped containers
+                in_stream.seekg(sizeof(Container) * extra_containers, ios::cur);
+            }
         }
     }
 
