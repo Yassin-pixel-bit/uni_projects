@@ -3,7 +3,7 @@
 void display_ships(Ship ships[], const int &count)
 {
     if (count == 0)
-        write_incolor("There are no ships to display\n", ERROR);
+        { write_incolor("There are no ships to display\n", ERROR); return; }
 
     // Find the longest ship name
     const string name_header = "Ship Name";
@@ -95,6 +95,18 @@ int check_ship_number(const Ship ships[], const int ship_count, const int input)
 
     // if not found return -1
     return -1;
+}
+
+bool check_ship_name(const Ship ships[], const int ship_count, const string &name_input)
+{
+    for (int i = 0; i < ship_count; i++)
+    {
+        if (ships[i].name == name_input)
+        {
+            return true; 
+        }
+    }
+    return false;
 }
 
 void add_containers(Ship &ship)
@@ -226,16 +238,48 @@ void add_ship(Ship ship[], int &ship_count)
         return;
     }
 
-    // TODO: read ship parameters from input and pass them to Ship constructor
     Ship new_ship;
 
-    cout << "Ship name: ";
-    cin >> ws; // clears cin.
-    getline(cin, new_ship.name);
+    bool is_duplicate_name;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+    do 
+    {
+        cout << "Ship name: ";
+        getline(cin, new_ship.name);
 
-    cout << "Ship number: ";
-    while (!(cin >> new_ship.number) || new_ship.number < 0) 
-        { clear_faulty_input("Please enter a positive number.\n"); }
+        // check if empty
+        if (new_ship.name.empty())
+             continue; 
+        
+        // Check for duplicates
+        is_duplicate_name = check_ship_name(ship, ship_count, new_ship.name); 
+        if ( is_duplicate_name )
+            write_incolor("A ship with this name already exists.\n", INFO);
+
+    } while (is_duplicate_name);
+
+    bool is_duplicate_num = false;
+    do
+    {
+        cout << "Ship number: ";
+
+        while (!(cin >> new_ship.number) || new_ship.number < 0) 
+        { 
+            clear_faulty_input("Please enter a positive number.\n");
+            cout << "ship number";
+        }
+
+        if (check_ship_number(ship, ship_count, new_ship.number) != -1)
+        {
+            write_incolor("A ship with this number already exists.\n", INFO);
+            is_duplicate_num = true;
+        }
+        else
+        {
+            is_duplicate_num = false;
+        }
+
+    } while (is_duplicate_num);
 
     cout << "Ship max capacity: ";
     while (!(cin >> new_ship.capacity) || new_ship.capacity <= 0)

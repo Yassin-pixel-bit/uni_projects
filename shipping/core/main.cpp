@@ -7,6 +7,7 @@ main.cpp
 #include "../ship_management/ship_sort.h"
 #include "../ship_management/ship_operation.h"
 #include "../ship_management/adv_ship_operation.h"
+#include "../ship_management/save_load.h"
 #include "ships.h"
 
 using namespace std;
@@ -17,6 +18,7 @@ void submenu_addShip(Ship ship[], int &ship_count);
 void submenu_search(Ship ship[], int &ship_count);
 void submenu_sort(Ship ship[], int &ship_count);
 void submenu_adv(Ship ship[], int &ship_count);
+void submenu_file(Ship ship[], int &ship_count);
 
 int main()
 {
@@ -24,6 +26,8 @@ int main()
 
     int choice, ships_count(0);
     Ship ships[configs::MAX_SHIPS];
+
+    load_file(ships, ships_count);
 
     while(true)
     {
@@ -67,6 +71,10 @@ int main()
                 submenu_sort(ships, ships_count);
                 break;
 
+            case 6:
+                submenu_file(ships, ships_count);
+                break;
+
             case 7:
                 submenu_adv(ships, ships_count);
                 break;
@@ -77,7 +85,7 @@ int main()
             
             default:
                 clear_terminal();
-                write_incolor("there is no such command. Please enter a number between [1-7].", ERROR);
+                write_incolor("there is no such command. Please enter a number between [1-7].\n", ERROR);
                 break;
         }
     }
@@ -113,7 +121,7 @@ void submenu_addShip(Ship ship[], int &ship_count)
     {
         
         while(!(cin >> choice))
-            { clear_faulty_input("Please enter a valid input."); }
+            { clear_faulty_input("Please enter a valid input.\n"); }
 
         switch (choice)
         {
@@ -135,7 +143,7 @@ void submenu_addShip(Ship ship[], int &ship_count)
                 break;
                 
             default:
-                write_incolor("No such command", ERROR);
+                write_incolor("No such command\n", ERROR);
                 break;
         }
     }
@@ -151,7 +159,7 @@ void submenu_search(Ship ship[], int &ship_count)
     while (running)
     {
         while(!(cin >> choice))
-            { clear_faulty_input("Please enter a valid input."); }
+            { clear_faulty_input("Please enter a valid input.\n"); }
 
         switch (choice)
         {
@@ -186,7 +194,7 @@ void submenu_sort(Ship ship[], int &ship_count)
     while (running)
     {
         while(!(cin >> choice))
-            { clear_faulty_input("Please enter a valid input."); }
+            { clear_faulty_input("Please enter a valid input.\n"); }
 
         switch (choice)
         {
@@ -207,7 +215,7 @@ void submenu_sort(Ship ship[], int &ship_count)
         
         default:
             clear_terminal();
-            write_incolor("No such command", ERROR);
+            write_incolor("No such command\n", ERROR);
             break;
         }
     }
@@ -223,7 +231,7 @@ void submenu_adv(Ship ship[], int &ship_count)
     while (running)
     {
         while(!(cin >> choice))
-            { clear_faulty_input("Please enter a valid input."); }
+            { clear_faulty_input("Please enter a valid input.\n"); }
 
         switch (choice)
         {
@@ -242,6 +250,52 @@ void submenu_adv(Ship ship[], int &ship_count)
                 break;
             
             default:
+                clear_terminal();
+                write_incolor("No such command\n", ERROR);
+                break;
+        }
+    } 
+}
+
+void submenu_file(Ship ship[], int &ship_count)
+{
+    int choice;
+    bool running = true;
+    create_file_submenu();
+    cout << "Enter your option: ";
+
+    while (running)
+    {
+        while(!(cin >> choice))
+            { clear_faulty_input("Please enter a valid input.\n"); }
+
+        switch (choice)
+        {
+            case 0:
+                clear_terminal();
+                running = false;
+                break;
+
+            case 1:
+                clear_terminal();
+                load_file(ship, ship_count);
+                running = false;
+                break;
+
+            case 2:
+                clear_terminal();
+                save_file(ship, ship_count);
+                running = false;
+                break;
+
+            case 3:
+                // overwrite to the currently open file.
+                running = false;
+                break;
+            
+            default:
+                clear_terminal();
+                write_incolor("No such command\n", ERROR);
                 break;
         }
     }
