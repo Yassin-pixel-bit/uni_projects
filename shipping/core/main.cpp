@@ -18,7 +18,7 @@ void submenu_addShip(Ship ship[], int &ship_count);
 void submenu_search(Ship ship[], int &ship_count);
 void submenu_sort(Ship ship[], int &ship_count);
 void submenu_adv(Ship ship[], int &ship_count);
-void submenu_file(Ship ship[], int &ship_count);
+void submenu_file(Ship ship[], int &ship_count, string& current_filename);
 
 int main()
 {
@@ -27,10 +27,15 @@ int main()
     int choice, ships_count(0);
     Ship ships[configs::MAX_SHIPS];
 
-    load_file(ships, ships_count);
+    string current_file = "";
+
+    load_file(ships, ships_count, current_file);
 
     while(true)
     {
+        // DEBUG
+        cout << current_file << endl;
+
         print_menu();
 
         cout << "Enter your option: ";
@@ -72,7 +77,7 @@ int main()
                 break;
 
             case 6:
-                submenu_file(ships, ships_count);
+                submenu_file(ships, ships_count, current_file);
                 break;
 
             case 7:
@@ -257,7 +262,7 @@ void submenu_adv(Ship ship[], int &ship_count)
     } 
 }
 
-void submenu_file(Ship ship[], int &ship_count)
+void submenu_file(Ship ship[], int &ship_count, string& current_filename)
 {
     int choice;
     bool running = true;
@@ -278,18 +283,19 @@ void submenu_file(Ship ship[], int &ship_count)
 
             case 1:
                 clear_terminal();
-                load_file(ship, ship_count);
+                load_file(ship, ship_count, current_filename);
                 running = false;
                 break;
 
             case 2:
                 clear_terminal();
-                save_new_file(ship, ship_count);
+                save_new_file(ship, ship_count, current_filename);
                 running = false;
                 break;
 
             case 3:
                 // overwrite to the currently open file.
+                overwrite_file(ship, ship_count, current_filename);
                 running = false;
                 break;
             

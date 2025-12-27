@@ -103,12 +103,18 @@ bool is_directory_full(string directory, const int limit)
 }
 
 // save the ships in a new file
-void save_new_file(const Ship ships[], int count)
+void save_new_file(const Ship ships[], int count, string& current_file)
 {
     if (count <= 0)
     {
+        char answer;
         write_incolor("there are no ships to save\n", INFO);
-        return;
+        cout << "Do you want to save anyway[y,n]: ";
+        cin >> answer;
+        if (tolower(answer) == 'n')
+        {
+            return;
+        }
     }
  
     if (!filesystem::exists(SAVE_DIR))
@@ -128,15 +134,15 @@ void save_new_file(const Ship ships[], int count)
         return;
     }
 
-    out_stream.write((char *)&count, sizeof(count));
+    current_file = file_path;
 
+    out_stream.write((char *)&count, sizeof(count));
     write_ship_data(out_stream, ships, count);
 
     out_stream.close();
-    cout << "succsefully wrote " << count <<" ships to " << file_path << endl;
+    string half_message = "succsefully write " + count; 
+    write_incolor(half_message + " ships to " + file_path + '\n', SUCCESS);
 }
-
-
 
 void display_save_files(string filenames[], int& file_counter)
 {
@@ -160,7 +166,7 @@ void display_save_files(string filenames[], int& file_counter)
     }
 }
 
-void load_file(Ship ships[], int &count)
+void load_file(Ship ships[], int &count, string& current_file)
 {
     // TODO: ask the user which save file he wants to read from
     if (!filesystem::exists(SAVE_DIR) || filesystem::is_empty(SAVE_DIR))
@@ -199,7 +205,10 @@ void load_file(Ship ships[], int &count)
     clear_terminal();
 
     if (choice == 0)
+    {
+        save_new_file(ships, count, current_file);
         return;
+    }
 
     string file_path = SAVE_DIR + '/' + filenames[choice - 1] + ".dat";
     cout << file_path << endl;
@@ -211,6 +220,8 @@ void load_file(Ship ships[], int &count)
         write_incolor("Couldn't open the file.\n", ERROR);
         return;
     }
+
+    current_file = file_path;
 
     in_stream.read((char *)&count, sizeof(count));
 
@@ -287,4 +298,31 @@ void append_ships(const string file_path, Ship new_ships[], const int new_count)
     write_ship_data(stream, new_ships, new_count);
 
     stream.close();
+}
+
+void overwrite_file(const Ship ships[], int count, const string current_filename)
+{
+    if(current_filename.empty())
+    {
+        write_incolor("No file is currently open to overwrite.\n", ERROR);
+        return;
+    }
+
+    ofstream out_stream;
+    out_stream.open(current_filename, ios::binary);
+
+    if(!out_stream)
+    {
+        write_incolor("Can't open the file.\n", ERROR);
+        return;
+    }
+
+    out_stream.write((char *)&count, sizeof(count));
+
+    write_ship_data(out_stream, ships, count);
+    out_stream.close();
+
+    clear_terminal();
+    string message = "Successfully overwrote the file "; 
+    write_incolor(message + current_filename + '\n', SUCCESS);
 }
