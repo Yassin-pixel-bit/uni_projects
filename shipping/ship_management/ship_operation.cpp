@@ -160,7 +160,7 @@ void add_containers(Ship &ship)
 }
 
 // add container(s) to a user-chosen ship
-void user_add_containers(Ship ships[], const int ship_count)
+void user_add_containers(Ship ships[], const int ship_count, bool auto_save, const string& current_file)
 {
     // early exit
     if (ship_count == 0)
@@ -228,6 +228,15 @@ void user_add_containers(Ship ships[], const int ship_count)
     
     clear_terminal();
     add_containers(ships[ship_idx]);
+    if (auto_save && !current_file.empty()) 
+    {
+        // Overwrite is safer for modifying internal data (containers)
+        overwrite_file(ships, ship_count, current_file);
+    } 
+    else 
+    {
+        write_incolor("Auto-save is OFF. Toggle it ON in Advanced Features to save automatically.\n", TIP);
+    }
 }
 
 void add_ship(Ship ship[], int &ship_count)

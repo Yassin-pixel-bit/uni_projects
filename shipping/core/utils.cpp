@@ -18,6 +18,7 @@ void write_incolor(const string &message, const int &type)
     const int red = 31;
     const int green = 32;
     const int yellow = 33;
+    const int blue = 34;
     const int reset = 0;
 
     switch (type)
@@ -32,6 +33,10 @@ void write_incolor(const string &message, const int &type)
 
         case SUCCESS:
             cout << "\033[" << green << "m" << message << "\033[" << reset << "m";
+            break;
+
+        case TIP:
+            cout << "\033[" << blue << "m" << message << "\033[" << reset << "m";
             break;
 
         default:

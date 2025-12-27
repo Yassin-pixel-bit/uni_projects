@@ -7,7 +7,8 @@ using namespace std;
 enum message_type {
     ERROR = 0,
     INFO = 1,
-    SUCCESS = 2
+    SUCCESS = 2,
+    TIP = 3
 };
 
 void clear_faulty_input(const std::string &message);

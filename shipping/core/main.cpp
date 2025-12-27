@@ -14,10 +14,10 @@ using namespace std;
 
 // prototypes
 void print_menu();
-void submenu_addShip(Ship ship[], int &ship_count);
+void submenu_addShip(Ship ship[], int &ship_count, bool auto_save, const string& current_file);
 void submenu_search(Ship ship[], int &ship_count);
 void submenu_sort(Ship ship[], int &ship_count);
-void submenu_adv(Ship ship[], int &ship_count);
+void submenu_adv(Ship ship[], int &ship_count, bool& auto_save, const string& current_file);
 void submenu_file(Ship ship[], int &ship_count, string& current_filename);
 
 int main()
@@ -26,8 +26,8 @@ int main()
 
     int choice, ships_count(0);
     Ship ships[configs::MAX_SHIPS];
-
     string current_file = "";
+    bool auto_save = false;
 
     load_file(ships, ships_count, current_file);
 
@@ -56,11 +56,11 @@ int main()
             break;
 
             case 1:
-                submenu_addShip(ships, ships_count);
+                submenu_addShip(ships, ships_count, auto_save, current_file);
                 break;
             
             case 2:
-                user_add_containers(ships, ships_count);
+                user_add_containers(ships, ships_count, auto_save, current_file);
                 break;
 
             case 3:
@@ -81,7 +81,7 @@ int main()
                 break;
 
             case 7:
-                submenu_adv(ships, ships_count);
+                submenu_adv(ships, ships_count, auto_save, current_file);
                 break;
 
             case 8:
@@ -115,12 +115,14 @@ void print_menu()
     cout << "0) exit.\n";
 }
 
-void submenu_addShip(Ship ship[], int &ship_count)
+void submenu_addShip(Ship ship[], int &ship_count, bool auto_save, const string& current_file)
 {
     int choice;
     bool running = true;
     create_addShip_submenu();
     cout << "Enter Your option: ";
+
+    int old_count = ship_count;
 
     while(running)
     {
@@ -137,13 +139,40 @@ void submenu_addShip(Ship ship[], int &ship_count)
 
             case 1:
                 add_ship(ship, ship_count);
-                write_incolor("Ship added!\n\n", SUCCESS);
+                write_incolor("Ship added!\n", SUCCESS);
+
+                if (auto_save && !current_file.empty()) 
+                {
+                    // Append ONLY the new ship we put & because it wants an array
+                    append_ships(current_file, &ship[old_count], 1);
+                    write_incolor("[Auto-Save] Ship appended to file.\n", SUCCESS);
+                } 
+                else 
+                {
+                     write_incolor("Auto-save is OFF. Toggle it ON in Advanced Features to save automatically.\n", TIP);
+                }
+
                 running = false;
                 break;
 
             case 2:
                 add_multiple_ships(ship, ship_count);
-                write_incolor("Ship added!\n\n", SUCCESS);
+                write_incolor("Ship added!\n", SUCCESS);
+
+                if (auto_save && !current_file.empty()) 
+                {
+                    int added_amount = ship_count - old_count;
+                    if(added_amount > 0) 
+                    {
+                        append_ships(current_file, &ship[old_count], added_amount);
+                        write_incolor("[Auto-Save] Ships appended to file.\n", SUCCESS);
+                    }
+                } 
+                else 
+                {
+                     write_incolor("Auto-save is OFF. Toggle it ON in Advanced Features to save automatically.\n", TIP);
+                }
+
                 running = false;
                 break;
                 
@@ -226,10 +255,15 @@ void submenu_sort(Ship ship[], int &ship_count)
     }
 }
 
-void submenu_adv(Ship ship[], int &ship_count)
+void submenu_adv(Ship ship[], int &ship_count, bool& auto_save, const string& current_file)
 {
     int choice;
     bool running = true;
+
+    cout << "Auto-Save : " << (auto_save ? "ON\n" : "OFF\n");
+    if (auto_save && !current_file.empty()) 
+        cout << "Current File: " << current_file << "\n\n";
+
     create_adv_menu();
     cout << "Enter your option: ";
 
@@ -251,6 +285,33 @@ void submenu_adv(Ship ship[], int &ship_count)
                 break;
 
             case 2:
+                running = false;
+                break;
+
+            case 3:
+                if (auto_save) 
+                {
+                    // Turn OFF
+                    auto_save = false;
+                    clear_terminal();
+                    write_incolor("Auto-save disabled.\n", INFO);
+                } 
+                else 
+                {
+                    // Turn ON
+                    if (current_file.empty()) 
+                    {
+                        write_incolor("Cannot enable Auto-Save: No file loaded/selected.\n", ERROR);
+                    } 
+                    else 
+                    {
+                        auto_save = true;
+                        // Force overwrite immediately to sync memory to file
+                        overwrite_file(ship, ship_count, current_file);
+                        write_incolor("Auto-save ENABLED. File synced successfully.\n", SUCCESS);
+                    }
+                }
+
                 running = false;
                 break;
             
