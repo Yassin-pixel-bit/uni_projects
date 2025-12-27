@@ -103,7 +103,7 @@ bool is_directory_full(string directory, const int limit)
 }
 
 // save the ships in a new file
-void save_file(const Ship ships[], int count)
+void save_new_file(const Ship ships[], int count)
 {
     if (count <= 0)
     {
@@ -135,6 +135,8 @@ void save_file(const Ship ships[], int count)
     out_stream.close();
     cout << "succsefully wrote " << count <<" ships to " << file_path << endl;
 }
+
+
 
 void display_save_files(string filenames[], int& file_counter)
 {

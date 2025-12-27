@@ -2,3 +2,8 @@
 test_save_file:
     g++ -std=c++17 test_save_load.cpp ../ship_management/save_load.cpp ../ship_management/ship_operation.cpp  ../core/utils.cpp  -o test_save_file.exe
 
+test_append:
+    g++ -std=c++17 test_append.cpp ../ship_management/save_load.cpp ../ship_management/ship_operation.cpp ../core/utils.cpp -o test_append.exe
+
+test_save_load_edge.cpp:
+    g++ -std=c++17 test_save_load_edge.cpp ../ship_management/save_load.cpp ../ship_management/ship_operation.cpp ../core/utils.cpp -o test_edge_cases.exe

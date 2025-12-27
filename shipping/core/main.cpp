@@ -284,7 +284,7 @@ void submenu_file(Ship ship[], int &ship_count)
 
             case 2:
                 clear_terminal();
-                save_file(ship, ship_count);
+                save_new_file(ship, ship_count);
                 running = false;
                 break;
 
