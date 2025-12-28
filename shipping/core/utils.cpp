@@ -86,27 +86,47 @@ void pause()
     cin.get();
 }
 
-bool exit_program()
+bool exit_program(Ship ships[], bool auto_save, const int ship_count, const string& file_name)
 {
-    char close;
-
-    while(true)
+    // Handle Auto-Save
+    if (auto_save)
     {
-        cout << "Are you sure you want to exit (y,n) ";
-        while(!(cin >> close))
-        { clear_faulty_input("Enter y or n.\n"); }
-
-        if(tolower(close) == 'y') 
-        { 
-            cout << "GoodBye!"; 
-            return true; 
-        }
-        else if(tolower(close) == 'n')
-            return false;
-        else
-            cout << "Enter Y or N.\n";
+        overwrite_file(ships, ship_count, file_name);
+        cout << "Goodbye!\n";
+        return true;
     }
 
-    cout << "unrecognized answer. Not exiting.";
-    return false;
+    // Handle Manual Confirmation
+    char choice;
+    while(true)
+    {
+        cout << "Do you want to save changes to '" << file_name << "' before exiting?\n";
+        cout << "[y] Yes, save and exit.\n";
+        cout << "[n] No, exit without saving.\n";
+        cout << "[c] Cancel (don't exit).\n";
+        cout << "Enter choice: ";
+        
+        cin >> choice;
+        choice = tolower(choice);
+
+        if (choice == 'y')
+        {
+            overwrite_file(ships, ship_count, file_name);
+            cout << "Goodbye!\n";
+            return true;
+        }
+        else if (choice == 'n')
+        {
+            cout << "Exiting without saving... Goodbye!\n";
+            return true;
+        }
+        else if (choice == 'c')
+        {
+            return false; // Return to menu
+        }
+        else
+        {
+            clear_faulty_input("Invalid option.\n");
+        }
+    }
 }

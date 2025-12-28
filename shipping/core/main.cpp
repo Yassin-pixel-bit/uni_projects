@@ -16,7 +16,7 @@ using namespace std;
 void print_menu();
 void submenu_addShip(Ship ship[], int &ship_count, bool auto_save, const string& current_file);
 void submenu_search(Ship ship[], int &ship_count);
-void submenu_sort(Ship ship[], int &ship_count);
+void submenu_sort(Ship ship[], int &ship_count, const bool auto_save, const string& current_file);
 void submenu_adv(Ship ship[], int &ship_count, bool& auto_save, const string& current_file);
 void submenu_file(Ship ship[], int &ship_count, string& current_filename);
 
@@ -33,9 +33,6 @@ int main()
 
     while(true)
     {
-        // DEBUG
-        cout << current_file << endl;
-
         print_menu();
 
         cout << "Enter your option: ";
@@ -50,7 +47,7 @@ int main()
         switch (choice)
         {
             case 0:
-            if(exit_program())
+            if(exit_program(ships, auto_save,ships_count, current_file))
                 return 0;
             clear_terminal();
             break;
@@ -73,7 +70,7 @@ int main()
                 break;
 
             case 5:
-                submenu_sort(ships, ships_count);
+                submenu_sort(ships, ships_count, auto_save, current_file);
                 break;
 
             case 6:
@@ -218,7 +215,7 @@ void submenu_search(Ship ship[], int &ship_count)
     }
 }
 
-void submenu_sort(Ship ship[], int &ship_count)
+void submenu_sort(Ship ship[], int &ship_count, const bool auto_save, const string& current_file)
 {
     int choice;
     bool running = true;
@@ -238,12 +235,20 @@ void submenu_sort(Ship ship[], int &ship_count)
             break;
 
         case 1:
-            sort_by_ship_cap(ship, ship_count);
+            if (sort_by_ship_cap(ship, ship_count) && auto_save)
+            {
+                overwrite_file(ship, ship_count, current_file);
+                write_incolor("[Auto-save] arrangment saved to file.\n", SUCCESS);
+            }
             running = false;
             break;
         
         case 2:
-            sort_by_loaded_cargo(ship, ship_count);
+            if (sort_by_loaded_cargo(ship, ship_count) && auto_save)
+            {
+                overwrite_file(ship, ship_count, current_file);
+                write_incolor("[Auto-save] arrangment saved to file.\n", SUCCESS);
+            }
             running = false;
             break;
         
@@ -289,29 +294,12 @@ void submenu_adv(Ship ship[], int &ship_count, bool& auto_save, const string& cu
                 break;
 
             case 3:
-                if (auto_save) 
+                if(toggle_auto_save(auto_save))
                 {
-                    // Turn OFF
-                    auto_save = false;
-                    clear_terminal();
-                    write_incolor("Auto-save disabled.\n", INFO);
-                } 
-                else 
-                {
-                    // Turn ON
-                    if (current_file.empty()) 
-                    {
-                        write_incolor("Cannot enable Auto-Save: No file loaded/selected.\n", ERROR);
-                    } 
-                    else 
-                    {
-                        auto_save = true;
-                        // Force overwrite immediately to sync memory to file
-                        overwrite_file(ship, ship_count, current_file);
-                        write_incolor("Auto-save ENABLED. File synced successfully.\n", SUCCESS);
-                    }
+                    overwrite_file(ship, ship_count, current_file);
+                    write_incolor("Auto-save ENABLED.\n", SUCCESS);
+                    write_incolor("everytime you make a Change it will be saved automatically.\n", TIP);
                 }
-
                 running = false;
                 break;
             

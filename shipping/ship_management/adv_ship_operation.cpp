@@ -146,3 +146,25 @@ void search_ship_loaded_10t(Ship ships[], const int ship_count)
  
     display_ships(valid_ships, new_arr_idx);
 }
+
+bool toggle_auto_save(bool& auto_save)
+{
+    if (auto_save) 
+    {
+        // Turn OFF
+        auto_save = false;
+        clear_terminal();
+        write_incolor("Auto-save disabled.\n", INFO);
+    } 
+    else 
+    {
+        // Turn ON
+        auto_save = true;
+        clear_terminal();
+        write_incolor("Auto-save ENABLED.\n", SUCCESS);
+        write_incolor("everytime you make a Change it will be saved automatically.\n", TIP);
+        write_incolor("Syncing file now...\n", INFO);
+    }
+
+    return auto_save;
+}

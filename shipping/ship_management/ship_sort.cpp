@@ -28,7 +28,7 @@ void ask_user_tosave(Ship ships[], const int ship_count, char &answer)
 
 }
 
-void sort_by_ship_cap(Ship ships[], const int& ship_count)
+bool sort_by_ship_cap(Ship ships[], const int& ship_count)
 {
     Ship sorted_ships[MAX_SHIPS];
 
@@ -36,7 +36,7 @@ void sort_by_ship_cap(Ship ships[], const int& ship_count)
     {
         clear_terminal();
         write_incolor("No ships found!\n", ERROR);
-        return;
+        return false;
     }
 
     // no need to display or ask the user anything since there is nothing to save/change in the original array
@@ -44,7 +44,7 @@ void sort_by_ship_cap(Ship ships[], const int& ship_count)
     {
         clear_terminal();
         write_incolor("There is only one ship, nothing changed.\n", INFO);
-        return;
+        return false;
     }
 
     // fill the array with ships
@@ -78,18 +78,15 @@ void sort_by_ship_cap(Ship ships[], const int& ship_count)
     if (answer == 'y')
     {
         clear_terminal();
-
         copy(&sorted_ships[0], sorted_ships + ship_count, ships);
-
-        write_incolor("Arrangement saved successfully.\n", SUCCESS);
-        
+        return true;
     }
     else
-        return;
+        return false;
 
 }
 
-void sort_by_loaded_cargo(Ship ships[], const int& ship_count)
+bool sort_by_loaded_cargo(Ship ships[], const int& ship_count)
 {
     clear_terminal();
     string options[2] = {"1) ascending order.", "2) descending order."};
@@ -99,7 +96,7 @@ void sort_by_loaded_cargo(Ship ships[], const int& ship_count)
     {
         clear_terminal();
         write_incolor("No ships found!\n", ERROR);
-        return;
+        return false;
     }
 
     // no need to display or ask the user anything since there is nothing to save/change in the original array
@@ -107,7 +104,7 @@ void sort_by_loaded_cargo(Ship ships[], const int& ship_count)
     {
         clear_terminal();
         write_incolor("There is only one ship, nothing changed.\n", INFO);
-        return;
+        return false;
     }
 
     int choice;
@@ -149,7 +146,13 @@ void sort_by_loaded_cargo(Ship ships[], const int& ship_count)
         ask_user_tosave(asc_ships, ship_count, answer);
 
         if (answer == 'y')
+        {
+            clear_terminal();
             copy(&asc_ships[0], asc_ships + ship_count, ships);
+            return true;
+        }
+        else
+            return false;
     }
     else
     {
@@ -159,6 +162,12 @@ void sort_by_loaded_cargo(Ship ships[], const int& ship_count)
         ask_user_tosave(desc_ships, ship_count, answer);
         
         if (answer == 'y')
+        {
+            clear_terminal();
             copy(&desc_ships[0], desc_ships + ship_count, ships);
+            return true;
+        }
+        else
+            return false;
     }
 }

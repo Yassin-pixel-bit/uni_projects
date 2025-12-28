@@ -16,16 +16,15 @@ string ask_user_for_name()
 {
     string file_name;
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    
     while (true)
     {
+        bool change = false;
+
         cout << "What do you want to save this file as: ";
         getline(cin, file_name);
 
         if (file_name.empty()) 
         {
-            write_incolor("Filename cannot be empty.\n", ERROR);
             continue;
         }
 
@@ -36,17 +35,26 @@ string ask_user_for_name()
             write_incolor("Filename contains invalid characters ( / \\ : * ? \" < > | ).\n", ERROR);
             continue;
         }
-
         string file_path = SAVE_DIR + '/' + file_name + ".dat";
 
-        fstream file;
+        ifstream file;
         file.open(file_path);
-
         // check if the file exists
         if (file)
         {
             file.close();
             write_incolor("file already exists.\n", INFO);
+            continue;
+        }
+
+        char answer;
+        cout << "Are you sure you want to name the file " << file_name << "(y,n): ";
+        cin >> answer;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        if (tolower(answer) == 'n')
+        {
+            cout << "Operation cancelled. Please enter a new name.\n";
             continue;
         }
 
@@ -108,9 +116,15 @@ void save_new_file(const Ship ships[], int count, string& current_file)
     if (count <= 0)
     {
         char answer;
-        write_incolor("there are no ships to save\n", INFO);
-        cout << "Do you want to save anyway[y,n]: ";
-        cin >> answer;
+        if (!current_file.empty())
+        {
+            write_incolor("there are no ships to save\n", INFO);
+            cout << "Do you want to save anyway[y,n]: ";
+            cin >> answer;
+        }
+        else
+            answer = 'y';
+        
         if (tolower(answer) == 'n')
         {
             return;
@@ -136,7 +150,7 @@ void save_new_file(const Ship ships[], int count, string& current_file)
 
     current_file = file_path;
 
-    out_stream.write((char *)&count, sizeof(count));
+    out_stream.write((char *)&count, sizeof(count)); // first four bytes
     write_ship_data(out_stream, ships, count);
 
     out_stream.close();
@@ -169,9 +183,15 @@ void display_save_files(string filenames[], int& file_counter)
 void load_file(Ship ships[], int &count, string& current_file)
 {
     // TODO: ask the user which save file he wants to read from
-    if (!filesystem::exists(SAVE_DIR) || filesystem::is_empty(SAVE_DIR))
+    if (!filesystem::exists(SAVE_DIR))
     {
-        write_incolor("No save directory or files found!\n", INFO);
+        filesystem::create_directory(SAVE_DIR);
+    }
+
+    if (filesystem::is_empty(SAVE_DIR))
+    {
+        write_incolor("No save files found. You must create one to start.\n", INFO);
+        save_new_file(ships, count, current_file);
         return;
     }
 
@@ -211,8 +231,11 @@ void load_file(Ship ships[], int &count, string& current_file)
     }
 
     string file_path = SAVE_DIR + '/' + filenames[choice - 1] + ".dat";
-    cout << file_path << endl;
+    // cout << file_path << endl;
     
+    // ifstream -- reading
+    // ofstream -- writing
+    // fstream -- both
     ifstream in_stream;
     in_stream.open(file_path, ios::binary);
     if (!in_stream)
