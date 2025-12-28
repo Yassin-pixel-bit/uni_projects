@@ -68,7 +68,7 @@ int main()
                     {
                         overwrite_file(ships, ships_count, current_file);
                         clear_terminal();
-                        write_incolor("[Auto-save] succsefully saved the container", SUCCESS);
+                        write_incolor("[Auto-save] changes saved", SUCCESS);
                     }
                 }
                 break;
@@ -155,7 +155,7 @@ void submenu_addShip(Ship ship[], int &ship_count, bool auto_save, const string&
                 {
                     // Append ONLY the new ship we put & because it wants an array
                     append_ships(current_file, &ship[old_count], 1);
-                    write_incolor("[Auto-Save] Ship appended to file.\n", SUCCESS);
+                    write_incolor("[Auto-Save] changes saved.\n", SUCCESS);
                 }
 
                 running = false;
@@ -171,7 +171,7 @@ void submenu_addShip(Ship ship[], int &ship_count, bool auto_save, const string&
                     if(added_amount > 0) 
                     {
                         append_ships(current_file, &ship[old_count], added_amount);
-                        write_incolor("[Auto-Save] Ships appended to file.\n", SUCCESS);
+                        write_incolor("[Auto-Save] changes saved.\n", SUCCESS);
                     }
                 }
 
@@ -243,7 +243,7 @@ void submenu_sort(Ship ship[], int &ship_count, const bool auto_save, const stri
             if (sort_by_ship_cap(ship, ship_count) && auto_save)
             {
                 overwrite_file(ship, ship_count, current_file);
-                write_incolor("[Auto-save] arrangment saved to file.\n", SUCCESS);
+                write_incolor("[Auto-save] changes saved.\n", SUCCESS);
             }
             running = false;
             break;
@@ -252,7 +252,7 @@ void submenu_sort(Ship ship[], int &ship_count, const bool auto_save, const stri
             if (sort_by_loaded_cargo(ship, ship_count) && auto_save)
             {
                 overwrite_file(ship, ship_count, current_file);
-                write_incolor("[Auto-save] arrangment saved to file.\n", SUCCESS);
+                write_incolor("[Auto-save] changes saved.\n", SUCCESS);
             }
             running = false;
             break;
@@ -295,6 +295,12 @@ void submenu_adv(Ship ship[], int &ship_count, bool& auto_save, const string& cu
                 break;
 
             case 2:
+                if (distribute_ship_cargo(ship, ship_count) && auto_save)
+                {
+                    overwrite_file(ship, ship_count, current_file);
+                    write_incolor("[Auto-save] Changes saved.\n", SUCCESS);
+                }
+                
                 running = false;
                 break;
 

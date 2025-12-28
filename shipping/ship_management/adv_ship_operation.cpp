@@ -341,3 +341,114 @@ bool toggle_auto_save(bool& auto_save)
 
     return auto_save;
 }
+
+bool distribute_ship_cargo(Ship ships[], const int ship_count)
+{
+    clear_terminal();
+    if (ship_count < 2)
+    {
+        write_incolor("Need at least 2 ships to perform redistribution.\n", ERROR);
+        return false;
+    }
+
+    cout << "--- Redistribute Cargo from One Ship to Others ---\n";
+    display_ships(ships, ship_count);
+
+    int ship_num, source_ship_idx;
+    
+    // 1. Select the Source Ship
+    while (true)
+    {
+        cout << "Enter the ship number to distribute: ";
+        while (!(cin >> ship_num))
+        {
+            clear_faulty_input("Please enter a valid number.\n");
+            cout << "Enter the ship number to distribute: ";
+        }
+
+        source_ship_idx = check_ship_number(ships, ship_count, ship_num);
+        if (source_ship_idx == -1)
+        {
+            write_incolor("Ship not found.\n", ERROR);
+            continue;
+        }
+
+        break;
+    }
+
+    Ship& source = ships[source_ship_idx];
+    
+    if (source.container_count == 0)
+    {
+        write_incolor("This ship is already empty.\n", INFO);
+        return false;
+    }
+
+    int moved_count = 0;
+
+    Container left_overs[MAX_CONTAINERS];
+    int left_count = 0;
+
+    clear_terminal();
+    cout << "\nAttempting to move " << source.container_count << " containers\n";
+    for (int i = 0; i < source.container_count; i++)
+    {
+        bool moved = false;
+        Container& c = source.container[i];
+        
+        for (int j = 0; j < ship_count; j++)
+        {
+            if (j == source_ship_idx) continue;
+
+            Ship& target = ships[j];
+
+            if (get_remaining_capacity(target) >= c.weight && target.container_count < MAX_CONTAINERS)
+            {
+                target.container[target.container_count] = c;
+                target.container_count++;
+                target.used_capacity += c.weight;
+
+                cout << "Moved container (" << c.weight << "t) to ship " << target.number << " ( " << target.name << " ) ";
+
+                if (target.used_capacity == target.capacity)
+                {
+                    cout << "- (FULL)";
+                }
+                cout << endl;
+
+                moved = true;
+                moved_count++;
+                break;
+            }
+        }
+
+        if (!moved)
+            left_overs[left_count++] = c;
+    }
+
+    source.container_count = left_count;
+
+    if (left_count == 0)
+    {
+        source.used_capacity = 0;
+
+        write_incolor("All cargo distributed to other ships.\n", SUCCESS);
+        write_incolor("The source ship is now empty.\n", INFO);
+
+        return true;
+    }
+
+    for (int i = 0; i < left_count; i++)
+    {
+        source.container[i] = left_overs[i];
+        source.used_capacity += left_overs[i].weight;
+    }
+
+    string msg = "Moved " + to_string(moved_count) + " containers. " 
+                     + to_string(left_count) + " remain on original ship.\n";
+    write_incolor(msg, INFO);
+    write_incolor("Recommendation: Create a new shipment (Ship) for the remaining cargo.\n", TIP);
+
+    return true;
+    
+}

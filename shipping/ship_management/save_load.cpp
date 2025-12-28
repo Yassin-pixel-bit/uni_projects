@@ -16,11 +16,11 @@ string ask_user_for_name()
 {
     string file_name;
 
+    cout << "What do you want to save this file as: ";
     while (true)
     {
         bool change = false;
 
-        cout << "What do you want to save this file as: ";
         getline(cin, file_name);
 
         if (file_name.empty()) 
@@ -33,6 +33,7 @@ string ask_user_for_name()
         const string invalid_chars = "/\\:*?\"<>|";
         if (file_name.find_first_of(invalid_chars) != string::npos) {
             write_incolor("Filename contains invalid characters ( / \\ : * ? \" < > | ).\n", ERROR);
+            cout << "Enter valid name: ";
             continue;
         }
         string file_path = SAVE_DIR + '/' + file_name + ".dat";
@@ -44,6 +45,7 @@ string ask_user_for_name()
         {
             file.close();
             write_incolor("file already exists.\n", INFO);
+            cout << "Enter the name: ";
             continue;
         }
 
@@ -54,7 +56,7 @@ string ask_user_for_name()
 
         if (tolower(answer) == 'n')
         {
-            cout << "Operation cancelled. Please enter a new name.\n";
+            cout << "Operation cancelled.\n Please enter a new name: ";
             continue;
         }
 
@@ -345,7 +347,7 @@ void overwrite_file(const Ship ships[], int count, const string current_filename
     write_ship_data(out_stream, ships, count);
     out_stream.close();
 
-    clear_terminal();
-    string message = "Successfully overwrote the file "; 
-    write_incolor(message + current_filename + '\n', SUCCESS);
+    // clear_terminal();
+    // string message = "Successfully overwrote the file "; 
+    // write_incolor(message + current_filename + '\n', SUCCESS);
 }
