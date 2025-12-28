@@ -33,6 +33,11 @@ int main()
 
     while(true)
     {
+        if (!auto_save)
+        {
+            write_incolor("Auto-save is OFF. Toggle it On in Advanced features to save automatically.\n", TIP);
+        }
+
         print_menu();
 
         cout << "Enter your option: ";
@@ -57,7 +62,15 @@ int main()
                 break;
             
             case 2:
-                user_add_containers(ships, ships_count, auto_save, current_file);
+                if (user_add_container(ships, ships_count) )
+                {
+                    if(auto_save)
+                    {
+                        overwrite_file(ships, ships_count, current_file);
+                        clear_terminal();
+                        write_incolor("[Auto-save] succsefully saved the container", SUCCESS);
+                    }
+                }
                 break;
 
             case 3:
@@ -143,10 +156,6 @@ void submenu_addShip(Ship ship[], int &ship_count, bool auto_save, const string&
                     // Append ONLY the new ship we put & because it wants an array
                     append_ships(current_file, &ship[old_count], 1);
                     write_incolor("[Auto-Save] Ship appended to file.\n", SUCCESS);
-                } 
-                else 
-                {
-                     write_incolor("Auto-save is OFF. Toggle it ON in Advanced Features to save automatically.\n", TIP);
                 }
 
                 running = false;
@@ -164,10 +173,6 @@ void submenu_addShip(Ship ship[], int &ship_count, bool auto_save, const string&
                         append_ships(current_file, &ship[old_count], added_amount);
                         write_incolor("[Auto-Save] Ships appended to file.\n", SUCCESS);
                     }
-                } 
-                else 
-                {
-                     write_incolor("Auto-save is OFF. Toggle it ON in Advanced Features to save automatically.\n", TIP);
                 }
 
                 running = false;
@@ -302,7 +307,7 @@ void submenu_adv(Ship ship[], int &ship_count, bool& auto_save, const string& cu
                 }
                 else
                     write_incolor("Auto-save DISABLED", SUCCESS);
-                    
+
                 running = false;
                 break;
             

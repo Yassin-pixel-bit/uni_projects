@@ -73,7 +73,6 @@ bool find_single_ships(Ship ships[], int ship_count, int container_weight)
     if (count > 0)
     {
         cout << "Ships that can carry " << container_weight << " tons:\n";
-        cout << "----------------------------------------\n";
         display_ships(valid_ships, count);
         return true;
     }
@@ -97,8 +96,9 @@ void apply_cargo_split(Ship ships[], const SplitAction actions[], int action_cou
     write_incolor("Cargo successfully distributed across ships.\n", SUCCESS);
 }
 
-void show_user_cargo_split(Ship ships[], int ship_count, int container_weight)
+bool show_user_cargo_split(Ship ships[], int ship_count, int container_weight)
 {
+    clear_terminal();
     write_incolor("No single ship can carry this amount of cargo.\n", INFO);
 
     // 1. Validation: Check global capacity first
@@ -111,32 +111,32 @@ void show_user_cargo_split(Ship ships[], int ship_count, int container_weight)
 
     if (total_available < container_weight)
     {
-        write_incolor("Even combining all available ships, capacity is insufficient.\n", ERROR);
+        write_incolor("Insufficient total capacity across all ships.\n", ERROR);
         cout << "Total available: " << total_available << "t / Needed: " << container_weight << "t\n";
-        return;
+        return false;
     }
 
     // 2. Calculation: Generate the Plan
     SplitAction plan[MAX_SHIPS]; // We can't use more ships than exist
     int plan_count = 0;
     
-    int remaining_needed = container_weight;
+    int remaining = container_weight;
 
-    for (int i = 0; i < ship_count && remaining_needed > 0; i++)
+    for (int i = 0; i < ship_count && remaining > 0; i++)
     {
         int space = get_remaining_capacity(ships[i]);
         bool has_slot = ships[i].container_count < MAX_CONTAINERS;
 
         if (space > 0 && has_slot)
         {
-            int take = (remaining_needed < space) ? remaining_needed : space;
+            int take = (remaining < space) ? remaining : space;
             
             // Record the action
             plan[plan_count].ship_index = i;
             plan[plan_count].weight = take;
             plan_count++;
 
-            remaining_needed -= take;
+            remaining -= take;
         }
     }
 
@@ -150,9 +150,9 @@ void show_user_cargo_split(Ship ships[], int ship_count, int container_weight)
         int weight = plan[i].weight;
         
         // We can access the ship details using the index stored in the plan
-        cout << "Ship " << ships[idx].number << " (" << ships[idx].name << "): Load " << weight << " tons";
+        cout << "Ship " << ships[idx].number << " ( " << ships[idx].name << " ) " <<": will load " << plan[i].weight << " tons";
         
-        if (get_remaining_capacity(ships[idx]) == weight) 
+        if (get_remaining_capacity(ships[idx]) == weight)   
             cout << " (FULL)";
             
         cout << endl;
@@ -171,10 +171,12 @@ void show_user_cargo_split(Ship ships[], int ship_count, int container_weight)
     {
         // Pass the PLAN, not the weight
         apply_cargo_split(ships, plan, plan_count);
+        return true;
     }
     else
     {
         write_incolor("Operation cancelled.\n", INFO);
+        return false;
     }
 }
 
@@ -200,11 +202,87 @@ void search_by_cap_left(Ship ships[], const int ship_count)
 
     clear_terminal();
     
-    // 1. Try to find single ships first (keep existing logic)
     if (!find_single_ships(ships, ship_count, container_weight))
     {
-        // 2. If no single ship works, generate a split plan
-        show_user_cargo_split(ships, ship_count, container_weight);
+        cout << "No ship can carry this container\n";
+    }
+}
+
+bool user_add_container(Ship ships[], const int ship_count)
+{
+    clear_terminal();
+
+    if (ship_count == 0) {
+        write_incolor("No ships available!\n", ERROR);
+        return false;
+    }
+
+    int weight;
+    cout << "Enter container weight (tons): ";
+    while(!(cin >> weight) || weight <= 0) {
+        clear_faulty_input("Enter a positive number: ");
+        cout << "Enter container weight (tons): ";
+    }
+
+    Ship viable_ships[MAX_SHIPS];
+    int viable_count = 0;
+
+    for (int i = 0; i < ship_count; i++)
+    {
+        if (get_remaining_capacity(ships[i]) >= weight && ships[i].container_count < MAX_CONTAINERS) 
+        {
+            viable_ships[viable_count++] = ships[i];
+        }
+    }
+
+    if (viable_count > 0)
+    {
+        cout << "\nAvailable ships for " << weight << "t container:\n";
+        display_ships(viable_ships, viable_count);
+
+        int chosen_ship_num;
+        bool invalid_ship_num = false;
+        int main_arr_idx;
+        do
+        {
+            cout << "Enter the ship number to add a container to it: ";
+            while (!(cin >> chosen_ship_num))
+            {
+                clear_faulty_input("Please enter a number.\n");
+                cout << "Enter the ship number to add a container to it: ";
+            }
+
+            if(check_ship_number(viable_ships, viable_count, chosen_ship_num) != -1)
+            {
+                for(int i = 0; i < ship_count; i++)
+                {
+                    if(ships[i].number == chosen_ship_num)
+                    {
+                        main_arr_idx = i;
+                        invalid_ship_num = false;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                write_incolor("Please, Choose a ship from the table above.\n", INFO);
+                invalid_ship_num = true;
+            }
+        } while (invalid_ship_num);
+
+        // 3. APPLY THE CHANGE (Actually add the container)
+        ships[main_arr_idx].container[ships[main_arr_idx].container_count].weight = weight;
+        ships[main_arr_idx].container_count++;
+        ships[main_arr_idx].used_capacity += weight;
+
+        write_incolor("Container added successfully!\n", SUCCESS);
+        return true;
+    }
+    else 
+    {
+        bool splited = show_user_cargo_split(ships, ship_count, weight);
+        return splited;
     }
 }
 

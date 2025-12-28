@@ -38,9 +38,10 @@ void search_with_name(Ship ships[], const int& ship_count)
     Ship valid_ships[MAX_SHIPS];
     int found_count = 0;
 
+    clear_terminal();
     string prefix;
     cout << "Search: ";
-    cin >> ws; // clear the leftover input.
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
     getline(cin, prefix);
 
     for (int i = 0; i < ship_count; i++)
@@ -86,6 +87,7 @@ void search_by_cargo(Ship ships[], const int& ship_count)
     Ship valid_ships[MAX_SHIPS];
     int ship_counter(0), min, max;
 
+    clear_terminal();
     get_min_max(min, max);
 
     if (min > max)
