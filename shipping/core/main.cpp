@@ -300,6 +300,9 @@ void submenu_adv(Ship ship[], int &ship_count, bool& auto_save, const string& cu
                     write_incolor("Auto-save ENABLED.\n", SUCCESS);
                     write_incolor("everytime you make a Change it will be saved automatically.\n", TIP);
                 }
+                else
+                    write_incolor("Auto-save DISABLED", SUCCESS);
+                    
                 running = false;
                 break;
             
