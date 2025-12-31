@@ -12,13 +12,10 @@ void create_search_submenu()
     create_sub_menu(options, size);
 }
 
-// ONLY CHECKS IF THE STRING SATRTS WITH THE USER INPUT
-// case-insensitive
 bool is_valid_name(const string& prefix, const string& name)
 {
     const int prefix_length = prefix.size();
 
-    // if the checking name is smaller
     if (prefix_length > name.size())
         return false;
 
@@ -31,10 +28,8 @@ bool is_valid_name(const string& prefix, const string& name)
     return true;
 }
 
-// search with ship name (full or partial)
 void search_with_name(Ship ships[], const int& ship_count)
 {
-    // the ships that we found 
     Ship valid_ships[MAX_SHIPS];
     int found_count = 0;
 
@@ -56,7 +51,6 @@ void search_with_name(Ship ships[], const int& ship_count)
         }
     }
 
-    // display the found ships
     if (found_count > 0)
         display_ships(valid_ships, found_count);
     else
@@ -81,7 +75,6 @@ void get_min_max(int &min, int &max)
     }
 }
 
-// search the ship that has a loaded cap within a certain range
 void search_by_cargo(Ship ships[], const int& ship_count)
 {
     Ship valid_ships[MAX_SHIPS];
@@ -98,7 +91,6 @@ void search_by_cargo(Ship ships[], const int& ship_count)
 
     for (int i = 0; i < ship_count; i++)
     {
-        // to avoid creating a new ship I used a refrence
         const Ship &current_ship = ships[i];
 
         if (current_ship.used_capacity <= max && current_ship.used_capacity >= min)
@@ -120,7 +112,6 @@ void search_by_cargo(Ship ships[], const int& ship_count)
     }
 }
 
-// Gets the ship with the most free capacity
 void search_with_freecap(Ship ships[], const int& ship_count)
 {
     if (ship_count == 0)

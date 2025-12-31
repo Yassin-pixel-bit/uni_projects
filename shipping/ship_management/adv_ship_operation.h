@@ -6,6 +6,12 @@
 
 using namespace std;
 
+struct SplitAction
+{
+    int ship_index;
+    int weight;
+};
+
 void create_adv_menu();
 void create_container_menu();
 void search_by_cap_left(Ship ships[], const int ship_count);
@@ -14,9 +20,3 @@ void search_ship_loaded_10t(Ship ships[], const int ship_count);
 bool user_add_container(Ship ships[], const int ship_count);
 bool distribute_ship_cargo(Ship ships[], const int ship_count);
 bool toggle_auto_save(bool& auto_save);
-
-struct SplitAction
-{
-    int ship_index;
-    int weight;
-};

@@ -80,7 +80,7 @@ bool find_single_ships(Ship ships[], int ship_count, int container_weight)
 }
 
 // Helper: Applies the pre-calculated split plan
-// Now it just blindly follows orders - no math needed!
+// it just blindly follows orders
 void apply_cargo_split(Ship ships[], const SplitAction actions[], int action_count)
 {
     for (int i = 0; i < action_count; i++)
@@ -101,7 +101,6 @@ bool show_user_cargo_split(Ship ships[], int ship_count, int container_weight)
     clear_terminal();
     write_incolor("No single ship can carry this amount of cargo.\n", INFO);
 
-    // 1. Validation: Check global capacity first
     int total_available = 0;
     for (int i = 0; i < ship_count; i++)
     {
@@ -116,8 +115,7 @@ bool show_user_cargo_split(Ship ships[], int ship_count, int container_weight)
         return false;
     }
 
-    // 2. Calculation: Generate the Plan
-    SplitAction plan[MAX_SHIPS]; // We can't use more ships than exist
+    SplitAction plan[MAX_SHIPS];
     int plan_count = 0;
     
     int remaining = container_weight;
@@ -140,7 +138,6 @@ bool show_user_cargo_split(Ship ships[], int ship_count, int container_weight)
         }
     }
 
-    // 3. Visualization: Show the plan to the user
     write_incolor("You can split the cargo across these ships:\n", TIP);
     cout << "-----------------------------------------------------\n";
     
@@ -149,7 +146,6 @@ bool show_user_cargo_split(Ship ships[], int ship_count, int container_weight)
         int idx = plan[i].ship_index;
         int weight = plan[i].weight;
         
-        // We can access the ship details using the index stored in the plan
         cout << "Ship " << ships[idx].number << " ( " << ships[idx].name << " ) " <<": will load " << plan[i].weight << " tons";
         
         if (get_remaining_capacity(ships[idx]) == weight)   
@@ -159,7 +155,6 @@ bool show_user_cargo_split(Ship ships[], int ship_count, int container_weight)
     }
     cout << "-----------------------------------------------------\n";
 
-    // 4. Execution: Ask user to commit
     char choice;
     do {
         cout << "Do you want to apply this distribution? [y/n]: ";
@@ -169,7 +164,6 @@ bool show_user_cargo_split(Ship ships[], int ship_count, int container_weight)
 
     if (choice == 'y')
     {
-        // Pass the PLAN, not the weight
         apply_cargo_split(ships, plan, plan_count);
         return true;
     }
@@ -180,8 +174,6 @@ bool show_user_cargo_split(Ship ships[], int ship_count, int container_weight)
     }
 }
 
-
-// display the ships that can carry a container with a user-given weight
 void search_by_cap_left(Ship ships[], const int ship_count)
 {
     // early exit
@@ -271,7 +263,6 @@ bool user_add_container(Ship ships[], const int ship_count)
             }
         } while (invalid_ship_num);
 
-        // 3. APPLY THE CHANGE (Actually add the container)
         ships[main_arr_idx].container[ships[main_arr_idx].container_count].weight = weight;
         ships[main_arr_idx].container_count++;
         ships[main_arr_idx].used_capacity += weight;
@@ -286,7 +277,6 @@ bool user_add_container(Ship ships[], const int ship_count)
     }
 }
 
-// display ships that have more than 10 tons loaded
 void search_ship_loaded_10t(Ship ships[], const int ship_count)
 {
     // early exit
@@ -356,7 +346,6 @@ bool distribute_ship_cargo(Ship ships[], const int ship_count)
 
     int ship_num, source_ship_idx;
     
-    // 1. Select the Source Ship
     while (true)
     {
         cout << "Enter the ship number to distribute: ";

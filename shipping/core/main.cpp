@@ -1,8 +1,3 @@
-/*
-=============================================================================
-main.cpp
-=============================================================================
-*/
 #include "../ship_management/ship_search.h"
 #include "../ship_management/ship_sort.h"
 #include "../ship_management/ship_operation.h"
@@ -12,7 +7,6 @@ main.cpp
 
 using namespace std;
 
-// prototypes
 void print_menu();
 void submenu_addShip(Ship ship[], int &ship_count, bool auto_save, const string& current_file);
 void submenu_search(Ship ship[], int &ship_count);
@@ -110,10 +104,8 @@ int main()
 
 void print_menu()
 {
-    // print the title
     cout << "\n======SHIPPING======\n\n";
     
-    // print the main menu
     cout << "1) add ships (single or list).\n";
     cout << "2) add a container.\n";
     cout << "3) display all shipments.\n";
@@ -153,7 +145,6 @@ void submenu_addShip(Ship ship[], int &ship_count, bool auto_save, const string&
 
                 if (auto_save && !current_file.empty()) 
                 {
-                    // Append ONLY the new ship we put & because it wants an array
                     append_ships(current_file, &ship[old_count], 1);
                     write_incolor("[Auto-Save] changes saved.\n", SUCCESS);
                 }
@@ -357,7 +348,6 @@ void submenu_file(Ship ship[], int &ship_count, string& current_filename)
                 break;
 
             case 3:
-                // overwrite to the currently open file.
                 overwrite_file(ship, ship_count, current_filename);
                 running = false;
                 break;

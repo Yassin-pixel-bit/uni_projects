@@ -78,14 +78,6 @@ void create_sub_menu(const std::string options[], const int &count)
     }
 }
 
-// TODO: use in the future
-void pause()
-{
-    cout << "\nPress Enter to return...";
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin.get();
-}
-
 bool exit_program(Ship ships[], bool auto_save, const int ship_count, const string& file_name)
 {
     // Handle Auto-Save

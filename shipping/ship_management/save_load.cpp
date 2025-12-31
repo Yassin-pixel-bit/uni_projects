@@ -28,7 +28,7 @@ string ask_user_for_name()
             continue;
         }
 
-        // search the input for these invalid chars we use the escape character '\' before \ and "
+        // search the input for these invalid chars
         // string::npos means "non - position" or in this context not found
         const string invalid_chars = "/\\:*?\"<>|";
         if (file_name.find_first_of(invalid_chars) != string::npos) {
@@ -73,7 +73,6 @@ void write_ship_data(ostream& out_stream, const Ship ships[], const int count)
     {
         out_stream.write((char*)&ships[i].number,  sizeof(ships[i].number));
 
-        // WRITE THE STRING LENGTH, THEN THE STRING AS CSTRING
         int ship_name_len = ships[i].name.length();
         out_stream.write((char *)&ship_name_len, sizeof(ship_name_len));
         out_stream.write(ships[i].name.c_str(), ship_name_len);
@@ -112,7 +111,6 @@ bool is_directory_full(string directory, const int limit)
     return exceed;
 }
 
-// save the ships in a new file
 void save_new_file(const Ship ships[], int count, string& current_file)
 {
     if (count <= 0)
@@ -184,7 +182,6 @@ void display_save_files(string filenames[], int& file_counter)
 
 void load_file(Ship ships[], int &count, string& current_file)
 {
-    // TODO: ask the user which save file he wants to read from
     if (!filesystem::exists(SAVE_DIR))
     {
         filesystem::create_directory(SAVE_DIR);
@@ -203,9 +200,7 @@ void load_file(Ship ships[], int &count, string& current_file)
     int file_count = 0;
     display_save_files(filenames, file_count);
 
-    // ask the user to choose which file
     int choice;
-
     while (true)
     {
         cout << "Enter the file that u want to use[ 0 - " << file_count << "] : ";
@@ -233,11 +228,7 @@ void load_file(Ship ships[], int &count, string& current_file)
     }
 
     string file_path = SAVE_DIR + '/' + filenames[choice - 1] + ".dat";
-    // cout << file_path << endl;
     
-    // ifstream -- reading
-    // ofstream -- writing
-    // fstream -- both
     ifstream in_stream;
     in_stream.open(file_path, ios::binary);
     if (!in_stream)
@@ -346,8 +337,4 @@ void overwrite_file(const Ship ships[], int count, const string current_filename
 
     write_ship_data(out_stream, ships, count);
     out_stream.close();
-
-    // clear_terminal();
-    // string message = "Successfully overwrote the file "; 
-    // write_incolor(message + current_filename + '\n', SUCCESS);
 }

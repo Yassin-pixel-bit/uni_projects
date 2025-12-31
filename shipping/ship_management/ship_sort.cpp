@@ -14,11 +14,9 @@ void create_sort_submenu()
 
 void ask_user_tosave(Ship ships[], const int ship_count, char &answer)
 {
-    // display the sorted array
     clear_terminal();
     display_ships(ships, ship_count);
 
-    // ask the user if he wants to save it or not
     do {
         cout << "Do you want to save or use the old arrangment ['y','n']: ";
         cin >> answer;
@@ -39,7 +37,6 @@ bool sort_by_ship_cap(Ship ships[], const int& ship_count)
         return false;
     }
 
-    // no need to display or ask the user anything since there is nothing to save/change in the original array
     if (ship_count == 1)
     {
         clear_terminal();
@@ -47,7 +44,6 @@ bool sort_by_ship_cap(Ship ships[], const int& ship_count)
         return false;
     }
 
-    // fill the array with ships
     copy(&ships[0], ships + ship_count, sorted_ships);
 
     for (int i = ship_count; i > 1; i--)
@@ -70,11 +66,9 @@ bool sort_by_ship_cap(Ship ships[], const int& ship_count)
             break;
     }
 
-    // display the sorted array
     char answer;
     ask_user_tosave(sorted_ships, ship_count, answer);
 
-    // If yes, copy the data back element by element
     if (answer == 'y')
     {
         clear_terminal();
@@ -99,7 +93,6 @@ bool sort_by_loaded_cargo(Ship ships[], const int& ship_count)
         return false;
     }
 
-    // no need to display or ask the user anything since there is nothing to save/change in the original array
     if (ship_count == 1)
     {
         clear_terminal();
@@ -116,10 +109,8 @@ bool sort_by_loaded_cargo(Ship ships[], const int& ship_count)
 
     Ship asc_ships[MAX_SHIPS];
 
-    // fill the asc array
     copy(&ships[0], ships + ship_count, asc_ships);
 
-    // sort the asc array
     for (int i = ship_count; i > 1; i--)
     {
         bool sorted = true;

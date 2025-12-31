@@ -5,7 +5,6 @@ void display_ships(Ship ships[], const int &count)
     if (count == 0)
         { write_incolor("There are no ships to display\n", ERROR); return; }
 
-    // Find the longest ship name
     const string name_header = "Ship Name";
     int max_name_length = name_header.length();
 
@@ -15,10 +14,8 @@ void display_ships(Ship ships[], const int &count)
             max_name_length = ships[i].name.length();
     }
 
-    // add padding
     max_name_length += 2;
 
-    // Column widths
     const int id_width = 4;
     const int ship_no_width = 10;
     const int capacity_width = 13;
@@ -26,16 +23,13 @@ void display_ships(Ship ships[], const int &count)
     const int departure_width = 15;
     const int name_width = max_name_length;
 
-    // total table width
     int total_width = id_width + ship_no_width + name_width + capacity_width + used_width + departure_width + 7; // +7 for separators
 
-    // Print top border
     cout << "+";
     for (int i = 0; i < total_width - 2; i++)
         cout << "=";
     cout << "+\n";
 
-    // Print header
     cout << "| " 
          << left << setw(id_width - 1) << "ID" << "| "
          << setw(ship_no_width - 1) << "Ship No." << "| "
@@ -44,7 +38,6 @@ void display_ships(Ship ships[], const int &count)
          << setw(used_width - 1) << "Used(t)" << "| "
          << setw(departure_width - 1) << "Departure Day" << " |\n";
 
-    // Print header separator
     cout << "+";
     cout << string(id_width, '=') << "|";
     cout << string(ship_no_width, '=') << "|";
@@ -54,7 +47,6 @@ void display_ships(Ship ships[], const int &count)
     cout << string(departure_width, '=');
     cout << "+\n";
 
-    // Print ship data
     for (int i = 0; i < count; i++)
     {
         Ship current_ship = ships[i];
@@ -69,7 +61,6 @@ void display_ships(Ship ships[], const int &count)
              << setw(departure_width - 1) << current_ship.departure_day << " |\n";
     }
 
-    // Print bottom border
     cout << "+";
     for (int i = 0; i < total_width - 2; i++)
         cout << "=";
@@ -81,10 +72,8 @@ int get_remaining_capacity(const Ship &ship)
     return ship.capacity - ship.used_capacity;
 }
 
-// Make sure that the user-given ship number exists
 int check_ship_number(const Ship ships[], const int ship_count, const int input)
 {
-    // loop through each ship and check it's number with the input
     for (int i = 0; i < ship_count; i++)
     {
         if (ships[i].number == input)
@@ -111,8 +100,6 @@ bool check_ship_name(const Ship ships[], const int ship_count, const string &nam
 
 void add_containers(Ship &ship)
 {
-    // TODO: make sure that the containers weight don't exceed the ship's load capacity
-
     int container_count;
 
     cout << "How many containers do you want to add: ";
@@ -121,7 +108,6 @@ void add_containers(Ship &ship)
         clear_faulty_input("Please enter a number between [0 - 10]\n"); 
     }
 
-    // checks if the ship can carry more containers
     int space_left = MAX_CONTAINERS - ship.container_count;
     if (container_count > space_left)
     {
@@ -156,86 +142,6 @@ void add_containers(Ship &ship)
         ship.container[ship.container_count].weight = weight;
         ship.used_capacity += weight;
         ship.container_count++;
-    }
-}
-
-// add container(s) to a user-chosen ship
-void user_add_containers(Ship ships[], const int ship_count, bool auto_save, const string& current_file)
-{
-    // early exit
-    if (ship_count == 0)
-    {
-        clear_terminal();
-        write_incolor("No ships founded!", ERROR);
-        return;
-    }
-
-    clear_terminal();
-    cout << "These are all the available ships: \n";
-    cout << "--------------------------------------\n";
-
-    // only list ships that have free capacity
-    Ship free_ships[MAX_SHIPS];
-    int arr_idx(0);
-
-    for (int i = 0; i < ship_count; i++)
-    {
-        if (get_remaining_capacity(ships[i]) != 0 && ships[i].container_count < MAX_CONTAINERS)
-        {
-            free_ships[arr_idx] = ships[i];
-            arr_idx++;
-        }
-    }
-
-    if (arr_idx == 0)
-    {
-        write_incolor("there are no ships that have free capacity.\n", INFO);
-        return;
-    }
-
-    display_ships(free_ships, arr_idx);
-    cout << "--------------------------------------\n";
-
-    // ask the user to enter the ship number and then add the container(s)
-    bool invalid_shipNo = true;
-    int ship_num;
-    int ship_idx;
-    do
-    {
-        cout << "Enter the ship number to add a container to it: ";
-        while (!(cin >> ship_num))
-        {
-            clear_faulty_input("Please enter an existing ship number\n");
-            cout << "ship number: ";
-        }
-
-        ship_idx = check_ship_number(ships, ship_count, ship_num); 
-        if (ship_idx != -1) // did find
-        {
-            if (get_remaining_capacity(ships[ship_idx]) > 0)
-            {
-                invalid_shipNo = false; // Valid ship and has space
-            }
-            else
-            {
-                write_incolor("That ship is full. Please choose one from the list above.\n", INFO);
-            }
-        }
-        else
-            write_incolor("Ship not found!\n", ERROR);
-        
-    } while (invalid_shipNo);
-    
-    clear_terminal();
-    add_containers(ships[ship_idx]);
-    if (auto_save && !current_file.empty()) 
-    {
-        // Overwrite is safer for modifying internal data (containers)
-        overwrite_file(ships, ship_count, current_file);
-    } 
-    else 
-    {
-        write_incolor("Auto-save is OFF. Toggle it ON in Advanced Features to save automatically.\n", TIP);
     }
 }
 
@@ -310,7 +216,6 @@ void add_ship(Ship ship[], int &ship_count)
         add_containers(new_ship);
     }
 
-    // add the newly created ship to the ship array
     ship[ship_count] = new_ship;
     ship_count++;
 
