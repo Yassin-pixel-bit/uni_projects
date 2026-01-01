@@ -73,10 +73,15 @@ bool sort_by_ship_cap(Ship ships[], const int& ship_count)
     {
         clear_terminal();
         copy(&sorted_ships[0], sorted_ships + ship_count, ships);
+        write_incolor("Changes applied\n", SUCCESS);
         return true;
     }
     else
+    {
+        clear_terminal();
+        write_incolor("Changes canceled\n", SUCCESS);
         return false;
+    }
 
 }
 
@@ -140,10 +145,15 @@ bool sort_by_loaded_cargo(Ship ships[], const int& ship_count)
         {
             clear_terminal();
             copy(&asc_ships[0], asc_ships + ship_count, ships);
+            write_incolor("Changes applied\n", SUCCESS);
             return true;
         }
         else
+        {
+            clear_terminal();
+            write_incolor("Changes canceled\n", SUCCESS);
             return false;
+        }
     }
     else
     {
@@ -156,9 +166,14 @@ bool sort_by_loaded_cargo(Ship ships[], const int& ship_count)
         {
             clear_terminal();
             copy(&desc_ships[0], desc_ships + ship_count, ships);
+            write_incolor("Changes applied\n", SUCCESS);
             return true;
         }
         else
+        {
+            clear_terminal();
+            write_incolor("Changes canceled\n", SUCCESS);
             return false;
+        }
     }
 }

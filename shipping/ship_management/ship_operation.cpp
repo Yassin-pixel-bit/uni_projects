@@ -162,11 +162,9 @@ void add_ship(Ship ship[], int &ship_count)
         cout << "Ship name: ";
         getline(cin, new_ship.name);
 
-        // check if empty
         if (new_ship.name.empty())
              continue; 
         
-        // Check for duplicates
         is_duplicate_name = check_ship_name(ship, ship_count, new_ship.name); 
         if ( is_duplicate_name )
             write_incolor("A ship with this name already exists.\n", INFO);
@@ -181,7 +179,7 @@ void add_ship(Ship ship[], int &ship_count)
         while (!(cin >> new_ship.number) || new_ship.number < 0) 
         { 
             clear_faulty_input("Please enter a positive number.\n");
-            cout << "ship number";
+            cout << "ship number: ";
         }
 
         if (check_ship_number(ship, ship_count, new_ship.number) != -1)
@@ -196,7 +194,7 @@ void add_ship(Ship ship[], int &ship_count)
 
     } while (is_duplicate_num);
 
-    cout << "Ship max capacity: ";
+    cout << "Ship max capacity in tons: ";
     while (!(cin >> new_ship.capacity) || new_ship.capacity <= 0)
         { clear_faulty_input("Please enter a positive number.\n"); }
 
@@ -233,6 +231,7 @@ void add_multiple_ships(Ship ship[], int &ship_count)
 
     for (int i = 0; i < amount; i++)
     {
+        cout << "Ship " << i + 1 << endl;
         add_ship(ship, ship_count);
     }
 }

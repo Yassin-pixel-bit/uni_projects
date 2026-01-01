@@ -79,8 +79,6 @@ bool find_single_ships(Ship ships[], int ship_count, int container_weight)
     return false;
 }
 
-// Helper: Applies the pre-calculated split plan
-// it just blindly follows orders
 void apply_cargo_split(Ship ships[], const SplitAction actions[], int action_count)
 {
     for (int i = 0; i < action_count; i++)
@@ -129,7 +127,6 @@ bool show_user_cargo_split(Ship ships[], int ship_count, int container_weight)
         {
             int take = (remaining < space) ? remaining : space;
             
-            // Record the action
             plan[plan_count].ship_index = i;
             plan[plan_count].weight = take;
             plan_count++;
@@ -176,7 +173,6 @@ bool show_user_cargo_split(Ship ships[], int ship_count, int container_weight)
 
 void search_by_cap_left(Ship ships[], const int ship_count)
 {
-    // early exit
     if (ship_count == 0)
     {
         clear_terminal();
@@ -267,6 +263,7 @@ bool user_add_container(Ship ships[], const int ship_count)
         ships[main_arr_idx].container_count++;
         ships[main_arr_idx].used_capacity += weight;
 
+        clear_terminal();
         write_incolor("Container added successfully!\n", SUCCESS);
         return true;
     }
@@ -279,7 +276,6 @@ bool user_add_container(Ship ships[], const int ship_count)
 
 void search_ship_loaded_10t(Ship ships[], const int ship_count)
 {
-    // early exit
     if (ship_count == 0)
     {
         clear_terminal();
@@ -296,7 +292,6 @@ void search_ship_loaded_10t(Ship ships[], const int ship_count)
 
     for (int i = 0; i < ship_count; i++)
     {
-        // a refrence to avoid copying
         const Ship &current_ship = ships[i];
         if (current_ship.used_capacity > 10)
         {
@@ -318,13 +313,11 @@ bool toggle_auto_save(bool& auto_save)
 {
     if (auto_save) 
     {
-        // Turn OFF
         auto_save = false;
         clear_terminal();
     } 
     else 
     {
-        // Turn ON
         auto_save = true;
         clear_terminal();
     }

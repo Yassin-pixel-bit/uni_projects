@@ -56,7 +56,7 @@ void search_with_name(Ship ships[], const int& ship_count)
     else
     {
         clear_terminal();
-        write_incolor("No ships founded!", ERROR);
+        write_incolor("No ships founded!\n", ERROR);
     }
 }
 
@@ -103,7 +103,7 @@ void search_by_cargo(Ship ships[], const int& ship_count)
     if (ship_counter == 0)
     {
         clear_terminal();
-        write_incolor("No ships in that range were found", INFO);
+        write_incolor("No ships in that range were found\n", ERROR);
     }
     else
     {

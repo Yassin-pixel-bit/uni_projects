@@ -140,6 +140,7 @@ void submenu_addShip(Ship ship[], int &ship_count, bool auto_save, const string&
                 break;
 
             case 1:
+                clear_terminal();
                 add_ship(ship, ship_count);
                 write_incolor("Ship added!\n", SUCCESS);
 
@@ -153,8 +154,9 @@ void submenu_addShip(Ship ship[], int &ship_count, bool auto_save, const string&
                 break;
 
             case 2:
+                clear_terminal();
                 add_multiple_ships(ship, ship_count);
-                write_incolor("Ship added!\n", SUCCESS);
+                write_incolor("Ships added!\n", SUCCESS);
 
                 if (auto_save && !current_file.empty()) 
                 {
